@@ -1,0 +1,48 @@
+
+h1{
+    font-size: 125px;
+}
+
+.title{
+    font-size: 25px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.tickets-table{
+    width:100%;
+    margin: 0 auto;
+}
+
+button{
+    width:250px;
+}
+
+.forms-html{
+    display:flex;
+    flex-direction: column;
+
+    width:80%;
+
+    align-items: center;
+    align-self: center;
+    
+    gap:30px;
+}
+.form-component{
+    min-width: 550px;
+    display:flex;
+    flex-direction: column;
+    gap:5px;
+    align-items: center;
+    align-self: center;
+}
+
+.chat-component{
+    max-height: 350px;
+    align-items: normal;
+    border: 1px solid red;
+
+    overflow: auto;
+    
+}
