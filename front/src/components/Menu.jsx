@@ -1,7 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
-const Menu = () =>{
+const Menu = ({setLogin, role}) =>{
+    const navigate = useNavigate();
+
+    const LogOutHandle = (event) => {
+        axios.post("http://localhost:3000/api/user-logout")
+        .then((response) => {
+            console.log(response);
+            setLogin(false);
+            navigate("/");
+        })
+        .catch( (error) => {
+            console.log(error);
+        });
+    };
+
     return(
         <ul className="menu bg-base-200 rounded-box w-56">
             <h2>Ticket System</h2>
@@ -23,40 +39,51 @@ const Menu = () =>{
                 </Link>
             </li>
         
-        <li>
-            <Link to='/manage/tickets'>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            Tickets Administration
-            </Link>
-        </li>
-        <li>
-            <Link to='/manage/agents'>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            User Administration
-            </Link>
-        </li>
+        { role === "admin" || role === "agent" ?
+            (
+                <li>
+                    <Link to='/manage/tickets'>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Tickets Administration
+                    </Link>
+                </li>
+            ) : (<></>)
+        }
+
+        {role === "admin" ? 
+            (
+                <li>
+                    <Link to='/manage/agents'>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    User Administration
+                    </Link>
+                </li>
+            ) : (<></>)
+        }
+        
+       
         <li>
             <Link to='/user-settings'>
             <svg
@@ -75,7 +102,7 @@ const Menu = () =>{
             </Link>
         </li>
             <li>
-                <a>
+                <a onClick={LogOutHandle}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"

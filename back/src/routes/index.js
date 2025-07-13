@@ -4,13 +4,16 @@ const userController = require('../controllers/userController');
 const { query, body } = require('express-validator');
 const {validate} = require('../middlewares/validate');
 
-
+//  Users
 router.get('/users', userController.getUsers);
 
-router.get('/user-info', 
-    query('email'),
+router.get('/user-info',
+    userController.getPeersonalUserInfo);
+
+router.get('/user-info-search',
+    query('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Incorrect Email Field'),
     validate,
-    userController.getUserInfo);
+    userController.getSpecificUserInfo);
 
 router.post('/user-login', 
     body('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Incorrect Email Field'),
@@ -44,5 +47,57 @@ router.delete('/users',
     userController.deleteUser);
 
 router.post('/user-logout', userController.logOut);
+
+//  Tickets
+router.post('/ticket-create', 
+    body('title').notEmpty().isLength({max: 250}).withMessage("Incorrect Title Field"),
+    body('description').notEmpty().isLength({max: 5024}).withMessage("Incorrect description field"),
+    validate,
+    userController.CreateTicket);
+
+router.delete('/ticket-delete', 
+    query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
+    validate,
+    userController.DeleteTicket);
+
+router.put('/ticket-update-status', 
+    body('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
+    body('new_status').notEmpty().isInt().withMessage("Incorrect Status number"),
+    validate,
+    userController.ChangeTicketStatus);
+
+router.get('/tickets-all', 
+    validate,
+    userController.GetAllTickets);
+
+router.get('/ticket', 
+    query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
+    validate,
+    userController.GetTicketInfo);
+
+router.get('/tickets', 
+    userController.GetPersonalTickets);
+
+//  Comments
+router.post("/create-comment",
+    body('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
+    body('message').notEmpty().isLength({min: 1,max: 500}).withMessage("Incorrect Text message"),
+    validate,
+    userController.CreateComment
+)
+
+router.get("/comments",
+    query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
+    validate,
+    userController.GetComments
+)
+
+//  Change Role
+router.put('/change-role', 
+    body('user_id').notEmpty().isInt().withMessage('Incorrect user_id'),
+    body('role').notEmpty().isLength({max:10}).withMessage("Incorrect role"),
+    validate,
+    userController.ChangeRole);
+
 
 module.exports = router;

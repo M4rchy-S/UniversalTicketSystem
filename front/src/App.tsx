@@ -25,15 +25,51 @@ import {useState, useEffect} from 'react';
 
 
 function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [role, setRole] = useState("");
+  const [userid, setUserid] = useState("");
+  const [name, setName] = useState("");
+  const [lastname, setLastname] = useState("");
+
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/user-info")
+    .then((response) => {
+      setLogin(true);
+      setLoading(false);
+
+      console.log(response.data);
+
+      setRole(response.data.role);
+      setUserid(response.data.id);
+      setName(response.data.name);
+      setLastname(response.data.last_name);
+
+
+    })
+    .catch((error) => {
+      setLoading(false);
+      setLogin(false);
+    })
+  }, [login]);
+
+
+  if(loading)
+    return(
+      <>
+        <span className="loading loading-dots loading-xl"></span>
+      </>
+    )
 
   if(!login)
     return(
       <>
         <Routes>
-          <Route path='/' element={<Login/>} />
-          <Route path='/login' element={<Login/>} />
-          <Route path='/register' element={<Register/>} />
+          <Route path='/' element={<Login setLogin={setLogin} />} />
+          <Route path='/login' element={<Login setLogin={setLogin}/>} />
+          <Route path='/register' element={<Register setLogin={setLogin}/>} />
 
         </Routes>
       </>
@@ -45,7 +81,7 @@ function App() {
       <div className='main-container'>
 
         <div className='left-panel'>
-          <Menu/>
+          <Menu setLogin={setLogin} role={role}/>
         </div>
 
         <div className='right-panel'>
@@ -62,10 +98,21 @@ function App() {
 
               <Route path="/tickets" element={<Home/>} />
               <Route path="/create-ticket" element={<TicketCreate/>} />
-              <Route path="/ticket/:ticketId" element={<TicketInfo/>} />
+              <Route path="/ticket/:ticketId" element={<TicketInfo userid={userid} name={name} lastname={lastname} role={role}/>} />
 
-              <Route path="/manage/tickets" element={<TicketsManage/>}/>
-              <Route path="/manage/agents" element={<AgentsLists/>}/>
+
+              {role === "agent" || role === "admin" ? 
+                (
+                  <Route path="/manage/tickets" element={<TicketsManage/>}/>
+                ) : (<></>)
+              }
+
+              {role === "admin" ? 
+                (
+                  <Route path="/manage/agents" element={<AgentsLists/>}/>
+                ) : (<></>)
+              }
+
 
             </Routes>
           </div>

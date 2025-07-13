@@ -1,10 +1,14 @@
 import React from 'react';
 import './pages.css';
 import {useNavigate} from 'react-router';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 const Home = () =>{
     const navigate = useNavigate();
+    const [tickets, setTickets] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     function CreateTicketButton()
     {
@@ -16,18 +20,29 @@ const Home = () =>{
         navigate(`/ticket/${id}`);
     }
 
-    const tickets = [
-        {
-            id: 1,
-            title: "Title1",
-            status: "Ok"
-        }, 
-        {
-            id: 2,
-            title: "Title2",
-            status: "Bad"
-        }
-    ];
+    useEffect(() => {
+
+        axios.get("http://localhost:3000/api/tickets")
+        .then((response) => {
+            console.log(response);
+            setLoading(false);
+            setTickets(response.data);
+        })
+        .catch( (error) => {
+            console.log(error);
+            setLoading(false);
+        });
+
+    }, [])
+
+   
+
+    if(loading)
+        return( 
+            <>
+                <span className="loading loading-dots loading-xl"></span>
+            </>
+        )
 
     return(
         <>
@@ -38,7 +53,6 @@ const Home = () =>{
 
             <div className="overflow-x-auto tickets-table">
                 <table className="table">
-                    {/* head */}
                     <thead>
                     <tr>
                         <th>№</th>
@@ -50,7 +64,7 @@ const Home = () =>{
                     
                     {
                         tickets.map( ticket => 
-                            <tr className="hover:bg-base-300" onClick={e => InfoTicketClick(ticket.id)}>
+                            <tr key={ticket.id} className="hover:bg-base-300" onClick={e => InfoTicketClick(ticket.id)}>
                                 <th>{ticket.id}</th>
                                 <td>{ticket.title}</td>
                                 <td> <div className="badge badge-success">{ticket.status}</div> </td>

@@ -1,9 +1,13 @@
 import React from 'react';
 import './pages.css';
 import {useNavigate} from 'react-router';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 
 const TicketsManage = () =>{
+    const [loading, setLoading] = useState(true);
+    const [tickets, setTickets] = useState([]);
     const navigate = useNavigate();
 
     function InfoTicketClick(id)
@@ -11,22 +15,73 @@ const TicketsManage = () =>{
         navigate(`/ticket/${id}`);
     }
 
-    const tickets = [
-        {
-            id: 1,
-            title: "Title1",
-            status: "Ok",
-            name: "name",
-            last_name: "last_name"
-        }, 
-        {
-            id: 2,
-            title: "Title2",
-            status: "Bad",
-            name: "name",
-            last_name: "last_name"
-        }
-    ];
+    function handleChangeStatus(id, status)
+    {
+        console.log(`Id: ${id} with status ${status}`);
+
+        axios.put("http://localhost:3000/api/ticket-update-status",{
+            ticket_id: id,
+            new_status: status
+        })
+        .then((response) => {
+    
+            console.log(response.data);
+            alert("success");
+    
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
+    }
+
+    function handleDeleteTicket(id)
+    {
+        axios.delete(`http://localhost:3000/api/ticket-delete?ticket_id=${id}`)
+        .then((response) => {
+    
+            console.log(response.data);
+            alert("success");
+            
+            const temp = [...tickets];
+            
+            for(let i = 0; i < temp.length; i++)
+            {
+                if(temp[i].id == id)
+                {
+                    delete temp[i];
+                    break;
+                }
+            }
+
+            setTickets(temp);
+
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    useEffect(() => {
+        axios.get("http://localhost:3000/api/tickets-all")
+        .then((response) => {
+    
+            console.log(response.data);
+    
+            setTickets(response.data);
+            setLoading(false);
+    
+        })
+        .catch((error) => {
+            console.log(error);
+            setLoading(false);
+        });
+    }, []);
+
+    
+
+    if(loading)
+        return(<span className="loading loading-dots loading-xl"></span>)
 
     return(
         <>
@@ -43,20 +98,25 @@ const TicketsManage = () =>{
                         <th>№</th>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Name</th>
-                        <th>Last Name</th>
                     </tr>
                     </thead>
                     <tbody>
                     
                     {
                         tickets.map( ticket => 
-                            <tr className="hover:bg-base-300" onClick={e => InfoTicketClick(ticket.id)}>
+                            <tr key={ticket.id} className="hover:bg-base-300">
                                 <th>{ticket.id}</th>
-                                <td>{ticket.title}</td>
-                                <td> <div className="badge badge-success">{ticket.status}</div> </td>
-                                <td>{ticket.name}</td>
-                                <td>{ticket.last_name}</td>
+                                <td className='clickable' onClick={e => InfoTicketClick(ticket.id)}>{ticket.title}</td>
+                                <td> 
+                                    <select defaultValue={ticket.status} className="select select-primary selection-menu" onChange={e => { handleChangeStatus(ticket.id, e.target.value);}}>
+                                        <option value='0'>Opened</option>
+                                        <option value='1'>In Progress</option>
+                                        <option value='2'>Closed</option>
+                                    </select>
+                                </td>
+                                <td >
+                                    <button className="btn btn-error del-btn" onClick={e => handleDeleteTicket(ticket.id)}>Delete</button>
+                                </td>
                             </tr>)
                     }
 
