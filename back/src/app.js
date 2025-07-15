@@ -1,30 +1,23 @@
 const express = require('express');
-const routes = require('./routes');
+const {Server} = require("socket.io");
+const {createServer} = require("node:http");
+
+const sessionMiddleware  = require('./config/session-config');
+const corsSettings = require('./config/cors-config');
+
 const logger = require('./middlewares/logger');
-const session = require("express-session")
+const routes = require('./routes');
+
 const cors = require("cors");
-const { cookie } = require('express-validator');
-const { http } = require('winston');
 
 const app = express();
+const httpServer = createServer(app);
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  // origin: "*",
-  credentials: true
-}));
+app.use(cors(corsSettings));
 
 app.use(express.json());
 
-app.use(session({
-  secret: "secret_secret",
-  resave: false,
-  cookie: {
-    secure: false,
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
-}));
+app.use(sessionMiddleware);
 
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`);
@@ -38,7 +31,39 @@ app.use((err, req, res, next) => {
 
 app.use('/api', routes);
 
+const io = new Server(httpServer, {
+  cors: corsSettings
+});
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, next);
+});
+
+io.on("connection", (socket) => {
+  
+  const session = socket.request.session;
+
+  console.log("[+] Websocket user connected");
+  console.log(session);
+  
+  socket.on('message', ({msg}) => {
+
+    if(session.email)
+      console.log(`Email : ${session.email}`);
+
+    io.emit('message', {msg: msg});
+
+  });
+
+  socket.on('disconnect', () => {
+    console.log("[-] User diconected");
+  });
+
+});
+
+io.listen(4000);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -2,11 +2,14 @@ import React from 'react';
 import { useParams } from 'react-router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+
+    const [socket, setSocket] = useState(null);
 
     const {ticketId} = useParams();
 
@@ -39,6 +42,16 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
             console.log(error);
         });
 
+        const sct = io("http://localhost:4000", {
+            withCredentials: true
+        });
+        setSocket(sct);
+
+        sct.on('message', (data) => {
+            socket_get_message(data.msg);
+        });
+    
+
     }, []);
 
     function handleCreateComment()
@@ -68,6 +81,27 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         });
 
     }
+
+    function socket_send_message()
+    {
+        if(socket == null)
+            return;
+
+        socket.emit('message', {msg: commentMessage});
+        setCommentMessage("");
+    }
+
+    function socket_get_message(msg)
+    {
+        setComments([...comments, {
+            name: "Name",
+            last_name: "LastName",
+            role: "role",
+            text: msg,
+            user_id: 123
+        }]);
+    }
+
 
     if(loading)
         return (
@@ -107,9 +141,9 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     </div> */}
 
                     {
-                       comments.map( comment => 
+                       comments.map( (comment) => 
                             parseInt( comment.user_id) == userid ? 
-                            <p>
+                            <div >
                                 <div className="chat chat-end">
                                     <div className="chat-header">
                                         {comment.name + " " + comment.last_name} 
@@ -119,9 +153,9 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                         {comment.text}
                                     </div>
                                 </div>
-                            </p> 
+                            </div> 
                                 : 
-                            <p>
+                            <div >
                                 <div className="chat chat-start">
 
                                     <div className="chat-header">
@@ -132,7 +166,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                         {comment.text}
                                     </div>
                                 </div>
-                            </p>
+                            </div>
                             
                         )
                     }
@@ -142,8 +176,8 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 </div>
 
                 <div className='form-component'>
-                    <input type="text" placeholder="Type here" className="input" onChange={e => setCommentMessage(e.target.value)}/>
-                    <button type='button' className="btn btn-primary" onClick={handleCreateComment}>Send Message</button>
+                    <input type="text" placeholder="Type here" className="input"  value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/>
+                    <button type='button' className="btn btn-primary" onClick={socket_send_message}>Send Message</button>
                 </div>
 
 

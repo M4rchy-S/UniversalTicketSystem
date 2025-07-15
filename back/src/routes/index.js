@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const commentsController = require('../controllers/commentsController');
+const ticketsController = require('../controllers/ticketsController');
 const { query, body } = require('express-validator');
-const {validate} = require('../middlewares/validate');
+const { validate } = require('../middlewares/validate');
 
 //  Users
 router.get('/users', userController.getUsers);
@@ -53,43 +55,43 @@ router.post('/ticket-create',
     body('title').notEmpty().isLength({max: 250}).withMessage("Incorrect Title Field"),
     body('description').notEmpty().isLength({max: 5024}).withMessage("Incorrect description field"),
     validate,
-    userController.CreateTicket);
+    ticketsController.CreateTicket);
 
 router.delete('/ticket-delete', 
     query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
     validate,
-    userController.DeleteTicket);
+    ticketsController.DeleteTicket);
 
 router.put('/ticket-update-status', 
     body('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
     body('new_status').notEmpty().isInt().withMessage("Incorrect Status number"),
     validate,
-    userController.ChangeTicketStatus);
+    ticketsController.ChangeTicketStatus);
 
 router.get('/tickets-all', 
     validate,
-    userController.GetAllTickets);
+    ticketsController.GetAllTickets);
 
 router.get('/ticket', 
     query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
     validate,
-    userController.GetTicketInfo);
+    ticketsController.GetTicketInfo);
 
 router.get('/tickets', 
-    userController.GetPersonalTickets);
+    ticketsController.GetPersonalTickets);
 
 //  Comments
 router.post("/create-comment",
     body('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
     body('message').notEmpty().isLength({min: 1,max: 500}).withMessage("Incorrect Text message"),
     validate,
-    userController.CreateComment
+    commentsController.CreateComment
 )
 
 router.get("/comments",
     query('ticket_id').notEmpty().isInt().withMessage("Incorrect Ticket ID"),
     validate,
-    userController.GetComments
+    commentsController.GetComments
 )
 
 //  Change Role
