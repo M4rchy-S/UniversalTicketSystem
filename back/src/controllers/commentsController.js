@@ -4,16 +4,16 @@ const pool = require('../config/db');
 exports.CreateComment = async (req, res) => {
 try {
     if(!req.session.email)
-    return res.status(400).json({msg: "Not authorised"});
+        return res.status(400).json({msg: "Not authorised"});
     
     const {ticket_id, message} = req.body
     const author_id = req.session.user_id;
 
     if(req.session.role == 'user')
     {
-    const result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND id = $2", [author_id, ticket_id]);
-    if(result.rowCount == 0)
-        throw "Invalid user";
+        const result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND id = $2", [author_id, ticket_id]);
+        if(result.rowCount == 0)
+            throw "Invalid user";
     }
     
     const result = await pool.query("INSERT INTO comments (ticket_id, user_id, text) VALUES ($1, $2, $3)", [ticket_id, author_id, message]);

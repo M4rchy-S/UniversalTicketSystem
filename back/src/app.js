@@ -4,6 +4,7 @@ const {createServer} = require("node:http");
 
 const sessionMiddleware  = require('./config/session-config');
 const corsSettings = require('./config/cors-config');
+const WebSocketTicketChat = require('./controllers/TicketChatController');
 
 const logger = require('./middlewares/logger');
 const routes = require('./routes');
@@ -39,29 +40,10 @@ io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, next);
 });
 
-io.on("connection", (socket) => {
-  
-  const session = socket.request.session;
+WebSocketTicketChat(io);
 
-  console.log("[+] Websocket user connected");
-  console.log(session);
-  
-  socket.on('message', ({msg}) => {
-
-    if(session.email)
-      console.log(`Email : ${session.email}`);
-
-    io.emit('message', {msg: msg});
-
-  });
-
-  socket.on('disconnect', () => {
-    console.log("[-] User diconected");
-  });
-
-});
-
-io.listen(4000);
+const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 4000;
+io.listen(WEBSOCKET_PORT);
 
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {

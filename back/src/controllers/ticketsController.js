@@ -81,7 +81,7 @@ try {
 exports.GetTicketInfo = async (req, res) => {
 try {
     if(!req.session.email)
-    return res.status(400).json({msg: "Not authorised"});
+        return res.status(400).json({msg: "Not authorised"});
 
     const { ticket_id } = req.query;
     const author_id = req.session.user_id;
@@ -89,12 +89,15 @@ try {
 
     if(req.session.role == 'user')
     {
-    result = await pool.query('SELECT * FROM tickets WHERE author_id = $1 AND id = $2', [author_id, ticket_id]);
+        result = await pool.query('SELECT * FROM tickets WHERE author_id = $1 AND id = $2', [author_id, ticket_id]);
     }
     else
     {
-    result = await pool.query('SELECT * FROM tickets WHERE id = $1', [ticket_id]);
+        result = await pool.query('SELECT * FROM tickets WHERE id = $1', [ticket_id]);
     }
+
+    if(result.rowCount == 0)
+        throw "Ticket not found";
 
     return res.status(200).json(result.rows[0]);
 } catch (err) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
@@ -16,6 +16,8 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     const [comments, setComments] = useState([]);
 
     const [commentMessage, setCommentMessage] = useState("");
+
+    const lastMessageRef = useRef(null);
 
     useEffect(() => {
 
@@ -42,65 +44,46 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
             console.log(error);
         });
 
-        const sct = io("http://localhost:4000", {
+        const socket = io("http://localhost:4000", {
             withCredentials: true
         });
-        setSocket(sct);
+        setSocket(socket);
 
-        sct.on('message', (data) => {
-            socket_get_message(data.msg);
+        socket.on('message', (response) => {
+            socket_get_message(response);
         });
+
+        socket.emit('joinRoom', {room: parseInt(ticketId)});
     
-
     }, []);
-
-    function handleCreateComment()
-    {
-        if(commentMessage.length == 0)
-            return;
-
-        axios.post('http://localhost:3000/api/create-comment', {
-            ticket_id: ticketId,
-            message: commentMessage
-        })
-        .then((response) => {
-            console.log(response.data);
-
-            setComments([...comments, {
-                name: name,
-                last_name: lastname,
-                role: role,
-                text: commentMessage,
-                user_id: userid
-
-            }]);
-
-        })
-        .catch( (error) => {
-            console.log(error);
-        });
-
-    }
 
     function socket_send_message()
     {
         if(socket == null)
             return;
 
-        socket.emit('message', {msg: commentMessage});
+        socket.emit('send_message', { 
+            msg: commentMessage,
+            room: parseInt(ticketId)
+        });
+        
         setCommentMessage("");
     }
-
-    function socket_get_message(msg)
+    
+    function socket_get_message(data)
     {
-        setComments([...comments, {
-            name: "Name",
-            last_name: "LastName",
-            role: "role",
-            text: msg,
-            user_id: 123
+        setComments(prev => [...prev, {
+            name: data.name,
+            last_name: data.last_name,
+            role: data.role,
+            text: data.text,
+            user_id: data.user_id
         }]);
     }
+
+    useEffect(() => {
+        lastMessageRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [comments]);
 
 
     if(loading)
@@ -126,24 +109,10 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 <label htmlFor="">Support Chat</label>
                 <div className='form-component chat-component'>
 
-                    {/* <div className="chat chat-start">
-                        <div className="chat-header">
-                            Obi-Wan Kenobi
-                        </div>
-                        <div className="chat-bubble">You were the Chosen One!</div>
-                    </div>
-
-                    <div className="chat chat-start">
-                        <div className="chat-header">
-                            Obi-Wan Kenobi
-                        </div>
-                        <div className="chat-bubble">I loved you.</div>
-                    </div> */}
-
                     {
-                       comments.map( (comment) => 
+                       comments.map( (comment, index) => 
                             parseInt( comment.user_id) == userid ? 
-                            <div >
+                            <div key={index} ref={index === comments.length - 1 ? lastMessageRef : null}>
                                 <div className="chat chat-end">
                                     <div className="chat-header">
                                         {comment.name + " " + comment.last_name} 
@@ -155,7 +124,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                 </div>
                             </div> 
                                 : 
-                            <div >
+                            <div key={index} ref={index === comments.length - 1 ? lastMessageRef : null} >
                                 <div className="chat chat-start">
 
                                     <div className="chat-header">
