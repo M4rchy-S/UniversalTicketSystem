@@ -13,7 +13,7 @@ try {
 
     res.status(200).json(result.rows[0]);
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 
@@ -29,7 +29,7 @@ try {
 
     return res.status(200).send();
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 
@@ -47,7 +47,7 @@ try {
 
     return res.status(200).send();
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 
@@ -74,7 +74,7 @@ try {
 
     return res.status(200).json(result.rows);
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 
@@ -99,9 +99,16 @@ try {
     if(result.rowCount == 0)
         throw "Ticket not found";
 
-    return res.status(200).json(result.rows[0]);
+    const subscribers = await pool.query('SELECT users.id, users.name, users.last_name FROM users JOIN tickets_subscribers AS subs ON subs.agent_id = users.id WHERE subs.ticket_id = $1', [ticket_id]);
+
+    return res.status(200).json(
+        { 
+            ticket_info: result.rows[0],
+            subscribers: subscribers.rows
+        }
+    );
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 
@@ -116,7 +123,7 @@ try {
 
     return res.status(200).json(result.rows);
 } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
 }
 };
 

@@ -11,7 +11,7 @@ exports.getUsers = async (req, res) => {
     const result = await pool.query("SELECT id,name, last_name, email, role FROM users WHERE role != 'admin' ");
     res.status(200).json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -33,7 +33,7 @@ exports.getPeersonalUserInfo = async (req, res) => {
 
     res.status(200).json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -51,7 +51,7 @@ exports.getSpecificUserInfo = async (req, res) => {
 
     res.status(200).json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -81,7 +81,7 @@ exports.logIn = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -116,7 +116,7 @@ exports.updateUserNames = async (req, res) => {
     const result = await pool.query('UPDATE users SET name = $1, last_name = $2 WHERE email = $3 RETURNING *', [name, last_name, email]);
     res.status(200).send();
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -141,7 +141,7 @@ exports.updateUserPassword = async (req, res) => {
 
     res.status(200).send();
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -155,7 +155,7 @@ exports.deleteUser = async (req, res) => {
     await pool.query('DELETE FROM users WHERE email = $1', [email]);
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 
@@ -170,8 +170,11 @@ exports.logOut = async (req, res) => {
 //  Change roles
 exports.ChangeRole = async (req, res) => {
   try {
+    if(!req.session.email)
+      return res.status(400).json({msg: "Not authorised"});
+
     if(req.session.role != 'admin')
-      throw "Permission denied";
+      return res.status(400).json({msg: "Permission denied"});
 
     const {user_id, role} = req.body;
 
@@ -186,9 +189,51 @@ exports.ChangeRole = async (req, res) => {
 
     return res.status(200).send();
   } catch (err) {
-    res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
+
+exports.SubscribeTicket = async (req, res) => {
+  try{
+    if(!req.session.email)
+      return res.status(400).json({msg: "Not authorised"});
+
+    if(req.session.role == "user")
+      return res.status(400).json({msg: "Permission denied"});
+
+    const { ticket_id } = req.body;
+
+    const result = await pool.query("INSERT INTO tickets_subscribers (ticket_id, agent_id) VALUES ($1, $2)", [ticket_id, req.session.user_id]);
+
+    return res.status(200).send();
+  }
+  catch(err){
+   return res.status(500).json({ error: "Error happened" });
+  }
+
+};
+
+exports.UnsubscribeTicket = async (req, res) => {
+  try{
+    if(!req.session.email)
+      throw "Not authorised";
+
+    if(req.session.role == "user")
+      return res.status(400).json({msg: "Permission denied"});
+
+    const { ticket_id } = req.body;
+
+    const result = await pool.query("DELETE FROM tickets_subscribers WHERE ticket_id = $1 AND agent_id = $2", [ticket_id, req.session.user_id]);
+
+    return res.status(200).send();
+
+  }
+  catch(err){
+   return res.status(500).json({ error: "Error happened" });
+  }
+
+};
+
 
 
 

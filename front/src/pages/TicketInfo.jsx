@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { isCallChain } from 'typescript';
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
     const [loading, setLoading] = useState(true);
@@ -19,21 +20,46 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
     const lastMessageRef = useRef(null);
 
+    const [agents, setAgents] = useState([]);
+
+    const [iscurrentAgent, setIscurrentagent] = useState(false);
+
+    //  Get ticket info
     useEffect(() => {
 
         axios.get(`http://localhost:3000/api/ticket?ticket_id=${ticketId}`)
         .then((response) => {
             console.log(response);
-            setDescription(response.data.description);
-            setTitle(response.data.title);
+
+            const ticketInfo = response.data.ticket_info;
+            const subscribers = response.data.subscribers;
+
+            setAgents(subscribers);
+
+            setTitle(ticketInfo.title);
+            setDescription(ticketInfo.description);
+
+            for(let i = 0; i < subscribers.length; i++)
+            {
+                if(subscribers[i].id == userid)
+                {
+                    setIscurrentagent(true);
+                    break;
+                }
+            }
 
             setLoading(false);
         })
         .catch( (error) => {
             console.log(error);
+            alert("Error happened");
             setLoading(false);
         });
 
+    }, [iscurrentAgent]);
+
+    //  Get comments
+    useEffect( () => {
         axios.get(`http://localhost:3000/api/comments?ticket_id=${ticketId}`)
         .then((response) => {
             console.log(response.data);
@@ -42,8 +68,13 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         })
         .catch( (error) => {
             console.log(error);
+            alert("Error happened");
         });
+    }, []);
 
+
+    //  Get WebSocket
+    useEffect( () => {
         const socket = io("http://localhost:4000", {
             withCredentials: true
         });
@@ -53,8 +84,9 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
             socket_get_message(response);
         });
 
-        socket.emit('joinRoom', {room: parseInt(ticketId)});
-    
+        socket.emit('joinRoom', { 
+            room: parseInt(ticketId)
+        });
     }, []);
 
     function socket_send_message()
@@ -81,6 +113,33 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         }]);
     }
 
+    function subscribe_ticket()
+    {
+        axios.post("http://localhost:3000/api/sub-ticket", {
+            ticket_id: parseInt(ticketId)
+        })
+        .then( (response) => {
+            setIscurrentagent(true);
+        } )
+        .catch( (err) => {
+            console.log(err);
+        });
+    }
+
+    function unsubscribe_ticket()
+    {
+        axios.put("http://localhost:3000/api/sub-ticket", {
+            ticket_id: parseInt(ticketId)
+        })
+        .then( (response) => {
+            setIscurrentagent(false);
+        } )
+        .catch( (err) => {
+            console.log(err);
+        });
+    }
+
+
     useEffect(() => {
         lastMessageRef.current?.scrollIntoView({behavior: "smooth"});
     }, [comments]);
@@ -104,6 +163,19 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 <div className='form-component'>
                     <label htmlFor="">Description</label>
                     <textarea className="textarea" placeholder="Bio" value={description} readOnly></textarea>
+                </div>
+
+                <div>
+                    <label htmlFor="">Subscribed agents</label>
+
+                    {
+                        agents.length != 0 
+                        ?   agents.map( agent => 
+                                <p>{agent.name} {agent.last_name}</p>
+                            )
+                        : <p>No agents yet</p>
+                    }
+
                 </div>
 
                 <label htmlFor="">Support Chat</label>
@@ -148,6 +220,13 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     <input type="text" placeholder="Type here" className="input"  value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/>
                     <button type='button' className="btn btn-primary" onClick={socket_send_message}>Send Message</button>
                 </div>
+
+                {
+                    role != 'user' && 
+                    iscurrentAgent 
+                    ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-warning">Unsubscribe</button>
+                    : <button type="button" onClick={subscribe_ticket} className="btn btn-warning">Subscribe</button>
+                }
 
 
 

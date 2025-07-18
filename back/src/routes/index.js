@@ -101,5 +101,16 @@ router.put('/change-role',
     validate,
     userController.ChangeRole);
 
+//  Subscribe and unsubscribe ticket
+router.post('/sub-ticket', 
+    body('ticket_id').notEmpty().isInt().withMessage('Incorrect ticket_id'),
+    validate,
+    userController.SubscribeTicket);
+
+router.put('/sub-ticket', 
+    body('ticket_id').notEmpty().isInt().withMessage('Incorrect ticket_id'),
+    validate,
+    userController.UnsubscribeTicket);
+
 
 module.exports = router;
