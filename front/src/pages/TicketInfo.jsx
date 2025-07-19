@@ -3,7 +3,11 @@ import { useParams } from 'react-router';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { isCallChain } from 'typescript';
+
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+
+import '../components/quill.css'
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
     const [loading, setLoading] = useState(true);
@@ -162,7 +166,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 
                 <div className='form-component'>
                     <label htmlFor="">Description</label>
-                    <textarea className="textarea" placeholder="Bio" value={description} readOnly></textarea>
+                    <ReactQuill readOnly={true} className='quill' theme="snow" value={description}/>
                 </div>
 
                 <div>
@@ -222,13 +226,12 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 </div>
 
                 {
-                    role != 'user' && 
-                    iscurrentAgent 
-                    ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-warning">Unsubscribe</button>
-                    : <button type="button" onClick={subscribe_ticket} className="btn btn-warning">Subscribe</button>
+                    role != 'user' ?
+                        iscurrentAgent 
+                        ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-warning">Unsubscribe</button>
+                        : <button type="button" onClick={subscribe_ticket} className="btn btn-warning">Subscribe</button>
+                    : <></>
                 }
-
-
 
             </form>
         

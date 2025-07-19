@@ -16,7 +16,8 @@ const httpServer = createServer(app);
 
 app.use(cors(corsSettings));
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({extended: true, limit: '50mb'}));
 
 app.use(sessionMiddleware);
 

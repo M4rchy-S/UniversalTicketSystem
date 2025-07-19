@@ -4,7 +4,7 @@ const pool = require('../config/db');
 exports.CreateTicket = async (req, res) => {
 try {
     if(!req.session.email )
-    return res.status(400).json({msg: "Not authorised"});
+        return res.status(400).json({msg: "Not authorised"});
 
     const { title, description } = req.body;
     const author_id = req.session.user_id;

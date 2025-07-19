@@ -53,7 +53,7 @@ router.post('/user-logout', userController.logOut);
 //  Tickets
 router.post('/ticket-create', 
     body('title').notEmpty().isLength({max: 250}).withMessage("Incorrect Title Field"),
-    body('description').notEmpty().isLength({max: 5024}).withMessage("Incorrect description field"),
+    body('description').notEmpty().withMessage("Incorrect description field"),
     validate,
     ticketsController.CreateTicket);
 

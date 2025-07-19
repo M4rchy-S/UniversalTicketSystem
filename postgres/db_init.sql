@@ -1,12 +1,9 @@
 BEGIN;
 
+DROP TABLE IF EXISTS public.tickets_subscribers;
 DROP TABLE IF EXISTS public.comments;
 DROP TABLE IF EXISTS public.tickets ;
 DROP TABLE IF EXISTS public.users;
-DROP TABLE IF EXISTS public.tickets_subscribers;
-
-
-
 
 CREATE TABLE IF NOT EXISTS public.users
 (
@@ -23,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.tickets
 (
     id serial NOT NULL,
     title character varying(512) NOT NULL,
-    description character varying(512),
+    description text NOT NULL,
     status INT NOT NULL,
     author_id int NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

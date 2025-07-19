@@ -76,7 +76,7 @@ const TicketsManage = () =>{
             console.log(error);
             setLoading(false);
         });
-    }, []);
+    }, [tickets]);
 
     
 
