@@ -3,3 +3,11 @@
 {"level":"info","message":"POST /api/user-login","timestamp":"2025-07-12T11:06:40.421Z"}
 {"level":"info","message":"POST /api/user-login","timestamp":"2025-07-12T11:06:58.615Z"}
 {"level":"info","message":"POST /api/user-login","timestamp":"2025-07-12T11:07:29.911Z"}
+{"level":"info","message":"GET /api/user-info","timestamp":"2025-07-22T18:24:29.307Z"}
+{"level":"info","message":"GET /api/user-info","timestamp":"2025-07-22T18:24:29.314Z"}
+{"level":"info","message":"POST /api/user-login","timestamp":"2025-07-22T18:24:37.739Z"}
+{"level":"info","message":"POST /api/user-login","timestamp":"2025-07-22T18:24:46.356Z"}
+{"level":"info","message":"POST /api/user-login","timestamp":"2025-07-22T18:25:21.109Z"}
+{"level":"info","message":"GET /api/user-info","timestamp":"2025-07-22T18:25:32.102Z"}
+{"level":"info","message":"GET /api/user-info","timestamp":"2025-07-22T18:25:32.104Z"}
+{"level":"info","message":"POST /api/user-login","timestamp":"2025-07-22T18:25:44.634Z"}

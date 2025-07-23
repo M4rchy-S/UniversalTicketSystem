@@ -19,10 +19,10 @@ const Menu = ({setLogin, role}) =>{
     };
 
     return(
-        <ul className="menu bg-base-200 rounded-box w-56">
+        <ul className="menu rounded-box w-56">
             <h2>Ticket System</h2>
             <li>
-                <Link to='/'>
+                <Link to='/' className='nav-button'>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -42,7 +42,7 @@ const Menu = ({setLogin, role}) =>{
         { role === "admin" || role === "agent" ?
             (
                 <li>
-                    <Link to='/manage/tickets'>
+                    <Link to='/manage/tickets' className='nav-button'>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -64,7 +64,7 @@ const Menu = ({setLogin, role}) =>{
         {role === "admin" ? 
             (
                 <li>
-                    <Link to='/manage/agents'>
+                    <Link to='/manage/agents' className='nav-button'>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -85,7 +85,7 @@ const Menu = ({setLogin, role}) =>{
         
        
         <li>
-            <Link to='/user-settings'>
+            <Link to='/user-settings' className='nav-button'>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -102,7 +102,7 @@ const Menu = ({setLogin, role}) =>{
             </Link>
         </li>
             <li>
-                <a onClick={LogOutHandle}>
+                <a onClick={LogOutHandle} className='nav-button'>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"

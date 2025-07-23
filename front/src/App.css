@@ -4,12 +4,168 @@
 }
 
 :root{
-  
+  --font: "Poppins", sans-serif;
+  --label-color: #374151;
+  --bg-color: #F9FBFD;
+  --danger-color: #7F1D1D;
+  --main-font-color: #000000;
+  --menu-color: #D1D5DB;
 }
 
-.main-container{
-  /* background-color:red; */
+body p{
+  font-family: var(--font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  color: var(--main-font-color);
+}
 
+label{
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--label-color);
+}
+
+h1{
+  font-family: var(--font);
+  font-weight: 600;
+  font-style: normal;
+  font-size: 36px;
+  color: var(--main-font-color);
+}
+
+h3{
+  font-size:20px;
+  font-weight: 600;
+  font-style: oblique;
+  font-family: var(--font);
+}
+
+.form-header{
+  align-self:start;
+  margin-left:70px;
+}
+
+.danger-text{
+  display: flex;
+  align-self: flex-start;
+  margin-left: 75px;
+
+  max-width: 400px;  
+
+  font-family: var(--font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  color: var(--danger-color);
+}
+
+.main-text{
+  font-family: var(--font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  color: var(--main-font-color);
+}
+
+.hint-text{
+  font-family: var(--font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--label-color);
+  max-width: 400px;
+  /* margin-left:20px; */
+}
+
+a{
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--label-color);
+}
+
+a:hover{
+  color: var(--main-font-color);
+}
+
+.danger{
+  color: var(--danger-color);
+}
+
+.main_input{
+  min-width: 400px;
+  height: 48px;
+  border-radius: 7px;
+  padding: 10px;
+
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--label-color);
+}
+
+.big_button{
+  min-width:400px;
+  height:52px;
+  font-size: 16px;
+}
+    
+.small_links{
+  text-decoration: underline;
+}
+
+.right-helper {
+  display: flex;
+  align-content: center;
+  align-self: flex-end;
+  margin-right: 30px;
+}
+
+.nav-button{
+  border-radius: 6px;
+  width: 200px;
+  height: 40px;
+  gap: 6px;
+
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  
+  font-family: var(--font);
+  font-size: 14px;
+}
+
+h2{
+  font-family: var(--font);
+  font-weight: 600;
+  font-style:normal;
+  font-size: 24px;
+}
+
+h4{
+  font-weight: 500;
+  font-size: 16px;
+  font-family: var(--font);
+}
+
+.title{
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.tickets-table{
+  width:100%;
+  margin: 0 auto;
+}
+
+button{
+  width:250px;
+}
+
+
+.main-container{
   width:100vw;
   height:100vw;
 
@@ -19,61 +175,219 @@
 }
 
 .left-panel{
-  /* background-color:blue; */
-  /* width:200px; */
   height:100%;
+  width: 250px;
+  position: fixed;
+  background-color: var(--menu-color);
 }
 
 .right-panel{
-  /* background-color: green; */
+  padding-top: 25px;
+  margin-left:250px;
+
+  /* padding-left: 50px; */
+  /* padding-right: 50px; */
   flex-grow: 1;
   display:flex;
   flex-direction: column;
 
-}
-
-.top-navbar{
-  background-color: pink;
-  /* height:50px; */
+  background-color: var(--bg-color);
 }
 
 .body-container{
-  /* background-color: grey; */
-  height:250px;
+  /* height:250px; */
   flex-grow: 1;
-
-  padding: 10px;
-
-  /* overflow-y: scroll; */
-  /* overflow-x: scroll; */
 
   display:flex;
   flex-direction: column;
 
-  gap:25px;
+  gap:10px;
 
-  width: 80%;
+  width: 100%;
   align-self: center;
   align-items: center;
 }
 
 .menu{
-  padding-top:50px;
-  padding-left:10px;
-  padding-right:10px;
+  margin-top: 25px;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
-  height: 100vw;
+.chat-color{
+  background-color: unset;
+}
+
+.home-title{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.home-filters{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 50px;
+}
+
+.home-table-content{
+
+}
+
+.btn-style{
+  height:36px;
+  max-width:150px;
+  min-width: 125px;
+}
+
+.pagination button{
+  width: 50px;
+  font-size: 14px;
+}
+
+.pagination .page-button{
+  width: 100px;
+}
+
+.filters .tab{
+  padding-left: 125px;
+  padding-right: 125px;
+  height: 36px;
+}
+
+.table{
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+
+tbody tr:hover{
+  background-color: var(--menu-color);
+  cursor: pointer;
+}
+
+td .badge{
+  border-radius: 15px;
+}
+
+dialog button{
+  width:35px;
+  height:35px;
+}
+
+.modal-form{
   display:flex;
   flex-direction: column;
+  gap:25px;
+  margin-top:30px;
+}
+
+.modal-component{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-component label{
+  font-weight: 400;
+  font-family: var(--font);
+  font-size:14px;
+}
+
+.modal-component input{
+  font-size:14px;
+}
+
+.modal-component textarea{
+  font-size:14px;
+}
+
+.modal-form .btn{
+  width:220px;
+  height:40px;
+  font-size: 16px;
+}
+
+.ticket-info-title{
+  justify-content: start;
+  align-items: center;
+  gap:200px;
+}
+
+.info-ticket-container{
+  display:flex;
+  flex-direction: row;
+  height:83vh;
+  width:100%;
+}
+
+.left-chat-panel{
+  padding: 10px;
+  flex-grow: 1;
+  border-top: 2px solid var(--menu-color);
+  border-right: 0.5px solid var(--menu-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  
+}
+
+.chatMessages{
+  overflow-x: hidden;
+  overflow-y: scroll ;
+}
+
+.right-info-panel{
+  padding: 10px;
+  width:250px;
+
+  border-top: 2px solid var(--menu-color);
+  border-left: 0.5px solid var(--menu-color);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ticket-details{
+  display: flex;
+  flex-direction: column;
   gap:10px;
+  flex-wrap: nowrap;
 }
 
-h2{
-  font-size: 25px;
-  text-align: center;
+.user-input{
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top:10px;
+  padding-bottom:10px;
+
+  align-items: center;
 }
 
-h3{
-  font-size: 20px;
-  text-align: center;
+.user-input textarea{
+  width:90%;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: var(--font);
+}
+
+.user-input button{
+  height: 45px;
 }

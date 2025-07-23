@@ -86,10 +86,6 @@ function App() {
 
         <div className='right-panel'>
 
-          <div className="top-navbar">
-            <Navbar/>
-          </div>
-
           <div className='body-container'>
             <Routes>
               <Route path="/" element={<Home/>} />

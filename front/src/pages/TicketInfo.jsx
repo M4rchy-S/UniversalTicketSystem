@@ -156,7 +156,201 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
     return(
         <>
-            <h2 className='title'>Ticket Information</h2>
+            <div className='home-title ticket-info-title'>
+                <h4>
+                    Ticket Information 
+                </h4>
+
+                <h4>Title: {title}</h4>
+
+                <button type="submit" className="btn btn-primary btn-style" onClick={()=>document.getElementById('create-ticket-modal').showModal()}>
+                    Assign to ticket
+                </button>
+
+            </div>
+
+            <div className='info-ticket-container'>
+
+                <div className='left-chat-panel'>
+
+                    <div class='chatMessages'>
+                        <div className="chat chat-start">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Obi-Wan Kenobi
+                                <time className="text-xs opacity-50">12:45</time>
+                            </div>
+                            <div className="chat-bubble">You were the Chosen One!</div>
+                            <div className="chat-footer opacity-50">Delivered</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        <div className="chat chat-start">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Obi-Wan Kenobi
+                                <time className="text-xs opacity-50">12:45</time>
+                            </div>
+                            <div className="chat-bubble">You were the Chosen One!</div>
+                            <div className="chat-footer opacity-50">Delivered</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        <div className="chat chat-start">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Obi-Wan Kenobi
+                                <time className="text-xs opacity-50">12:45</time>
+                            </div>
+                            <div className="chat-bubble">You were the Chosen One!</div>
+                            <div className="chat-footer opacity-50">Delivered</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        <div className="chat chat-end">
+                            <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS chat bubble component"
+                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                                    />
+                                </div>
+                            </div>
+                            <div className="chat-header">
+                                Anakin
+                                <time className="text-xs opacity-50">12:46</time>
+                            </div>
+                            <div className="chat-bubble">I hate you!</div>
+                            <div className="chat-footer opacity-50">Seen at 12:46</div>
+                        </div>
+                        
+                        
+                        
+                    </div>
+
+                    <div class='user-input'>
+
+                        <textarea className="textarea" placeholder="Text input here"></textarea>
+                        <button className="btn btn-soft">Send message</button>
+
+                    </div>
+
+                   
+                
+                </div>
+
+                <div className='right-info-panel'>
+                    <h4>
+                        Ticket Details
+                    </h4>
+
+                    <div className='ticket-details'>
+                        <p>Assigned agent -- Name --</p>
+                        <p>Created xx/xx/xx </p>
+                        <p>Status status </p>
+                        <p>Description: efwafawefawef wefawfawefawfwfwfwfw </p>
+                        <p>Attachements</p>
+                    </div>
+
+                </div>
+            </div>
+
+
 
             <form action="" className='forms-html'>
                 <div className='form-component'>
@@ -194,7 +388,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                         {comment.name + " " + comment.last_name} 
                                     </div>
 
-                                    <div className="chat-bubble">
+                                    <div className="chat-bubble chat-color">
                                         {comment.text}
                                     </div>
                                 </div>
