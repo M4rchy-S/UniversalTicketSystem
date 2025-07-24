@@ -8,25 +8,43 @@ const Register = ({setLogin}) =>{
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rep_password, setRepPassword] = useState("");
     const [name, setName] = useState("");
     const [last_name, setLastName] = useState("");
+
+    const [danger, setDanger] = useState(false);
+    const [dangerText, setDangerText] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     const handleRegister = (event) =>
     {
         event.preventDefault();
+
+        setLoading(true);
+
         axios.post("http://localhost:3000/api/create-user", {
             email: email,
             password: password,
+            rep_password: rep_password,
             name: name,
             last_name: last_name
         })
         .then((response) => {
-            console.log(response);
+            setLoading(false);
             setLogin(true);
             navigate("/");
         })
         .catch( (error) => {
-            console.log(error);
+            const errors = error.response.data.errors;
+            console.log(errors);
+            if(Array.isArray(errors))
+                setDangerText(errors[0].msg);
+            else
+                setDangerText(errors);
+
+            setDanger(true);
+            setLoading(false);
         });
     }
 
@@ -39,10 +57,14 @@ const Register = ({setLogin}) =>{
                     Create an account
                 </h1>
 
-                <p className="danger-text">
-                    An account with this email already exists.
-                    Sign in instead.
-                </p>
+                {
+                    danger &&
+                        <p className="danger-text">
+                            {dangerText}
+                            {/* An account with this email already exists.
+                            Sign in instead. */}
+                        </p>
+                }
 
                 <form action="" className='forms-html' onSubmit={handleRegister}>
                     <div className='form-component'>
@@ -55,8 +77,14 @@ const Register = ({setLogin}) =>{
                         <input type="password" placeholder="Type here" className="input main_input" onChange={(e) => setPassword(e.target.value)}/>
                     </div>
 
+                    <div className='form-component'>
+                        <label htmlFor="">Repeat your password</label>
+                        <input type="password" placeholder="Type here" className="input main_input" onChange={(e) => setRepPassword(e.target.value)}/>
+                    </div>
+
                     <p className="hint-text">
-                        Use at least 8 characters, including 1 number and 1 special character (e.g., ! @ # $ % & ).
+                        {/* Use at least 8 characters, including 1 number and 1 special character (e.g., ! @ # $ % & ). */}
+                        Use at least 8 characters.
                     </p>
 
                     <div className='form-component'>
@@ -77,6 +105,11 @@ const Register = ({setLogin}) =>{
                         Already have an account? <span> </span>
                         <Link to='/login' role="tab" className="link">Log in</Link>
                     </div>
+
+                    {
+                        loading && 
+                            <span className="loading loading-spinner loading-xl"></span>
+                    }
 
                 </form>
 

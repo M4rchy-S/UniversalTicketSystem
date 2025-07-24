@@ -18,16 +18,17 @@ router.get('/user-info-search',
     userController.getSpecificUserInfo);
 
 router.post('/user-login', 
-    body('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Incorrect Email Field'),
-    body('password').notEmpty().isLength({min: 8,max: 250}).withMessage("Incorrect Password Field"),
+    body('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Enter a valid Email field'),
+    body('password').notEmpty().isLength({min: 8,max: 512}).withMessage("Enter password field with at least 8 characters"),
     validate,
     userController.logIn);
 
 router.post('/create-user', 
-    body('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Incorrect Email Field'),
-    body('name').notEmpty().isLength({max: 250}).withMessage("Incorrect Name Field"),
-    body('last_name').notEmpty().isLength({max: 250}).withMessage("Incorrect Last Name Field"),
-    body('password').notEmpty().isLength({min: 8,max: 250}).withMessage("Incorrect Password Field"),
+    body('email').notEmpty().withMessage('Incorrect Email Field').isLength({min:1, max: 250}).withMessage('Incorrect Email Field').isEmail().withMessage('Incorrect Email Field'),
+    body('name').notEmpty().withMessage("Incorrect Name Field").isLength({min:1, max: 250}).withMessage("Incorrect Name Field").withMessage("Incorrect Name Field"),
+    body('last_name').notEmpty().withMessage("Incorrect Last Name Field").isLength({min:1, max: 250}).withMessage("Incorrect Last Name Field"),
+    body('password').notEmpty().withMessage("Incorrect Password Field").isLength({min: 8,max: 250}).withMessage("Incorrect Password Field"),
+    body('rep_password').notEmpty().withMessage("Incorrect Repeat Password Field").isLength({min: 8,max: 250}).withMessage("Incorrect Repeat Password Field"),
     validate,
     userController.createUser);
 
@@ -47,6 +48,8 @@ router.delete('/users',
     body('email').notEmpty().isLength({max: 250}).isEmail().withMessage('Incorrect Email Field'),
     validate,
     userController.deleteUser);
+
+router.delete('/delete-account', userController.deleteYourself);
 
 router.post('/user-logout', userController.logOut);
 
@@ -77,7 +80,9 @@ router.get('/ticket',
     validate,
     ticketsController.GetTicketInfo);
 
-router.get('/tickets', 
+router.get('/tickets',
+    query('status').notEmpty().isInt().withMessage("Incorrect status search field"),
+    query('page').notEmpty().isInt().withMessage("Incorrect page search field"),
     ticketsController.GetPersonalTickets);
 
 //  Comments

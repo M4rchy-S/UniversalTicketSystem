@@ -325,7 +325,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
                     <div class='user-input'>
 
-                        <textarea className="textarea" placeholder="Text input here"></textarea>
+                        <textarea className="textarea text-no-resize" placeholder="Text input here"></textarea>
                         <button className="btn btn-soft">Send message</button>
 
                     </div>

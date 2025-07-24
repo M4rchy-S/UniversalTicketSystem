@@ -273,6 +273,15 @@ button{
   font-weight: 400;
 }
 
+.table thead tr th{
+  text-align: center;
+}
+
+.table tbody tr td{
+  border-right: 1px solid var(--menu-color);
+  text-align: center;
+}
+
 
 tbody tr:hover{
   background-color: var(--menu-color);
@@ -390,4 +399,15 @@ dialog button{
 
 .user-input button{
   height: 45px;
+}
+
+.center-loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text-no-resize{
+  resize: none;
 }

@@ -68,12 +68,12 @@ exports.logIn = async (req, res) => {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
 
     if(result.rowCount == 0)
-      throw "Could not find user";
+      throw "This user is not registered";
     
     const isMatch = await bcrypt.compare(password, result.rows[0].password);
     
     if(!isMatch)
-      throw "Invalid password";
+      throw "Password is incorrect";
 
     req.session.email = result.rows[0].email;
     req.session.role = result.rows[0].role;
@@ -81,7 +81,7 @@ exports.logIn = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    return res.status(500).json({ error: "Error happened" });
+    return res.status(500).json({ errors: err });
   }
 };
 
@@ -91,7 +91,17 @@ exports.createUser = async (req, res) => {
       return res.status(404).json({msg: "Already in session"});
 
     const { name, last_name, email } = req.body;
+    //  Validate fields
+    const collision = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if(collision.rowCount != 0)
+      throw "Email is already registered";
+
+    //  Create user 
+    if(req.body.password != req.body.rep_password)
+      throw "Passwords are not matched";
+
     const password = await bcrypt.hash(req.body.password, saltsRounds);
+    const rep_password = await bcrypt.hash(req.body.rep_password, saltsRounds);
 
     const result = await pool.query('INSERT INTO users (name, last_name, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *', [name, last_name, email, password, 'user']);
 
@@ -101,7 +111,7 @@ exports.createUser = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    res.status(500).json({ error: "Error happened" });
+    res.status(500).json({ errors: err });
   }
 };
 
@@ -154,6 +164,29 @@ exports.deleteUser = async (req, res) => {
 
     await pool.query('DELETE FROM users WHERE email = $1', [email]);
     res.status(204).send();
+  } catch (err) {
+    return res.status(500).json({ error: "Error happened" });
+  }
+};
+
+exports.deleteYourself = async (req, res) => {
+  try {
+    if(!req.session.email)
+      return res.status(404).json({msg: "Not initialised"});
+    if(req.session.role == "admin")
+      return res.status(404).json({msg: "Denied permission"});
+
+    const email  = req.session.email;
+
+    await pool.query('DELETE FROM users WHERE email = $1', [email]);
+
+    req.session.destroy( err => {
+      if(err){
+        throw "Error in session cleaning";
+      }
+    });
+
+    return res.status(204).send();
   } catch (err) {
     return res.status(500).json({ error: "Error happened" });
   }

@@ -40,7 +40,6 @@ function App() {
       setLogin(true);
       setLoading(false);
 
-      console.log(response.data);
 
       setRole(response.data.role);
       setUserid(response.data.id);
@@ -59,7 +58,7 @@ function App() {
   if(loading)
     return(
       <>
-        <span className="loading loading-dots loading-xl"></span>
+        <span className="loading loading-spinner loading-xl center-loading"></span>
       </>
     )
 

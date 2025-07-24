@@ -8,7 +8,12 @@ import axios from 'axios';
 const Home = () =>{
     const navigate = useNavigate();
     const [tickets, setTickets] = useState(null);
+
     const [loading, setLoading] = useState(true);
+
+    const [page, setPage] = useState(1);
+    const [status, setStatus] = useState(-1);
+    const [statusNames, setStatusNames] = useState(['All', 'Open', 'In Progress', 'Closed']);
 
     function CreateTicketButton()
     {
@@ -20,9 +25,21 @@ const Home = () =>{
         navigate(`/ticket/${id}`);
     }
 
+    function LeftClickPage()
+    {
+        if(page == 1)
+            return;
+        setPage(page => page - 1);
+    }
+
+    function RightClickPage()
+    {
+        setPage(page => page + 1);
+    }
+
     useEffect(() => {
 
-        axios.get("http://localhost:3000/api/tickets")
+        axios.get(`http://localhost:3000/api/tickets?status=${status}&page=${page}`)
         .then((response) => {
             console.log(response);
             setLoading(false);
@@ -33,7 +50,7 @@ const Home = () =>{
             setLoading(false);
         });
 
-    }, [])
+    }, [page, status])
 
    
 
@@ -60,41 +77,43 @@ const Home = () =>{
 
             <div className='home-filters'>
                 <div role="tablist" className="tabs tabs-lift filters">
-                    <a role="tab" className="tab tab-active"><h4>All</h4></a>
-                    <a role="tab" className="tab"><h4>Open</h4></a>
-                    <a role="tab" className="tab"><h4>In Progress</h4></a>
-                    <a role="tab" className="tab"><h4>Closed</h4></a>
+                    {
+                        statusNames.map( ( title, index) => 
+                            index - 1 == status 
+                                ? <div role="tab" className="tab tab-active"><h4>{title}</h4></div>
+                                : <div role="tab" className="tab" onClick={e => { setStatus(index-1); setPage(1)}}><h4>{title}</h4></div>
+                        )
+                    }
                 </div>
 
                 <div className="join pagination">
-                    <button className="join-item btn">«</button>
-                    <button className="join-item btn page-button">Page 1</button>
-                    <button className="join-item btn">»</button>
+                    <button className="join-item btn" onClick={e => LeftClickPage()}>«</button>
+                    <button className="join-item btn page-button">Page {page}</button>
+                    <button className="join-item btn" onClick={e => RightClickPage()}>»</button>
                 </div>
             </div>
 
             <div className="overflow-x-auto tickets-table home-table-content">
-                <table className="table">
+                <table className="table ">
                     <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Assigned agent</th>
-                    </tr>
+                        <tr>
+                            <th>№</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Assigned agent</th>
+                        </tr>
                     </thead>
-                    <tbody>
-                    
-                    {
-                        tickets.map( ticket => 
-                            <tr key={ticket.id} onClick={e => InfoTicketClick(ticket.id)}>
-                                <th>{ticket.id}</th>
-                                <td>{ticket.title}</td>
-                                <td> <div className="badge badge-success">{ticket.status} success</div> </td>
-                                <td>agent name</td>
-                            </tr>)
-                    }
 
+                    <tbody>
+                        {
+                            tickets.map( ticket => 
+                                <tr key={ticket.id} onClick={e => InfoTicketClick(ticket.id)}>
+                                    <td>{ticket.id}</td>
+                                    <td>{ticket.title}</td>
+                                    <td> <div className="badge badge-success">{ticket.status} success</div> </td>
+                                    <td>agent name</td>
+                                </tr>)
+                        }
                     </tbody>
                 </table>
             </div>

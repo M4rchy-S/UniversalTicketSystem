@@ -2,35 +2,35 @@ const pool = require('../config/db');
 
 //  Tickets
 exports.CreateTicket = async (req, res) => {
-try {
-    if(!req.session.email )
-        return res.status(400).json({msg: "Not authorised"});
+    try {
+        if(!req.session.email )
+            return res.status(400).json({msg: "Not authorised"});
 
-    const { title, description } = req.body;
-    const author_id = req.session.user_id;
+        const { title, description } = req.body;
+        const author_id = req.session.user_id;
 
-    const result = await pool.query('INSERT INTO tickets (title, description, status, author_id) VALUES ($1, $2, $3, $4) RETURNING *', [title, description, 0, author_id]);
+        const result = await pool.query('INSERT INTO tickets (title, description, status, author_id) VALUES ($1, $2, $3, $4) RETURNING *', [title, description, 0, author_id]);
 
-    res.status(200).json(result.rows[0]);
-} catch (err) {
-    return res.status(500).json({ error: "Error happened" });
-}
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        return res.status(500).json({ error: "Error happened" });
+    }
 };
 
 exports.DeleteTicket = async (req, res) => {
-try {
-    if(req.session.role != 'admin' )
-    return res.status(400).json({msg: "Permission denied"});
+    try {
+        if(req.session.role != 'admin' )
+        return res.status(400).json({msg: "Permission denied"});
 
-    const { ticket_id } = req.query;
+        const { ticket_id } = req.query;
 
-    let result = await pool.query('DELETE FROM comments WHERE ticket_id = $1', [ticket_id]);
-    result = await pool.query('DELETE FROM tickets WHERE id = $1', [ticket_id]);
+        let result = await pool.query('DELETE FROM comments WHERE ticket_id = $1', [ticket_id]);
+        result = await pool.query('DELETE FROM tickets WHERE id = $1', [ticket_id]);
 
-    return res.status(200).send();
-} catch (err) {
-    return res.status(500).json({ error: "Error happened" });
-}
+        return res.status(200).send();
+    } catch (err) {
+        return res.status(500).json({ error: "Error happened" });
+    }
 };
 
 
@@ -115,11 +115,23 @@ try {
 exports.GetPersonalTickets = async (req, res) => {
 try {
     if(!req.session.email)
-    return res.status(400).json({msg: "Not authorised"});
+        return res.status(400).json({msg: "Not authorised"});
 
+    const {status, page} = req.query;
     const author_id = req.session.user_id;
+    let result = null;
 
-    const result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 ORDER BY created_at DESC", [author_id]);
+    if(page < 1)
+        throw "Invalid page search field";
+
+    if(status == -1)
+    {
+        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 ORDER BY created_at DESC LIMIT 5 OFFSET $2", [author_id, (page-1) * 5]);
+    }
+    else
+    {
+        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND status = $2 ORDER BY created_at DESC LIMIT 5 OFFSET $3", [author_id, status, (page-1) * 5]);
+    }
 
     return res.status(200).json(result.rows);
 } catch (err) {

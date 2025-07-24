@@ -11,21 +11,37 @@ const Login = ({setLogin}) =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const [danger, setDanger] = useState(false);
+    const [dangerText, setDangerText] = useState("");
+
+    const [loading, setLoading] = useState(false);
+
 
     const handleLogin = (event) =>
     {
         event.preventDefault();
+
+        setLoading(true);
+
         axios.post("http://localhost:3000/api/user-login", {
             email: email,
             password: password
         })
         .then((response) => {
-            console.log(response);
+            setLoading(false);
             setLogin(true);
             navigate("/");
         })
         .catch( (error) => {
-            console.log(error);
+
+            const errors = error.response.data.errors;
+            if(Array.isArray(errors))
+                setDangerText(errors[0].msg);
+            else
+                setDangerText(errors);
+
+            setDanger(true);
+            setLoading(false);
         });
     }
 
@@ -38,9 +54,12 @@ const Login = ({setLogin}) =>{
                     Log in to your account
                 </h1>
 
-                <p className="danger-text">
-                    Enter a valid email address
-                </p>
+                {
+                    danger && 
+                        <p className="danger-text">
+                            {dangerText}
+                        </p>
+                }
 
                 <form action="" className='forms-html' onSubmit={handleLogin}>
                     <div className='form-component'>
@@ -52,7 +71,7 @@ const Login = ({setLogin}) =>{
                         <label htmlFor="">Your password</label>
                         <input  type="password" placeholder="Type here" className="input main_input" onChange={(e) => setPassword(e.target.value)}/>
                     </div>
-
+                    
                     <div className="right-helper">
                         <a className='link'>
                             Forgot password?
@@ -69,6 +88,11 @@ const Login = ({setLogin}) =>{
                             Sign Up
                         </Link>
                     </div>
+
+                    {
+                        loading &&
+                            <span className="loading loading-spinner loading-xl"></span>
+                    }
 
                 </form>
 
