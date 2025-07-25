@@ -48,6 +48,9 @@ function WebSocketTicketChat(systemIO)
                 return socket.emit('error', 'Access denied to this room');
             }
 
+            if(msg.length == 0)
+                return socket.emit('error', 'Access denied to this room');
+
             systemIO.to(room).emit('message', {
                 name: session.name,
                 last_name: session.last_name,

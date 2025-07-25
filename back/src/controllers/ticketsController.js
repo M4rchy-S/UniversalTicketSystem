@@ -126,11 +126,11 @@ try {
 
     if(status == -1)
     {
-        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 ORDER BY created_at DESC LIMIT 5 OFFSET $2", [author_id, (page-1) * 5]);
+        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 ORDER BY created_at DESC LIMIT 10 OFFSET $2", [author_id, (page-1) * 10]);
     }
     else
     {
-        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND status = $2 ORDER BY created_at DESC LIMIT 5 OFFSET $3", [author_id, status, (page-1) * 5]);
+        result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND status = $2 ORDER BY created_at DESC LIMIT 10 OFFSET $3", [author_id, status, (page-1) * 10]);
     }
 
     return res.status(200).json(result.rows);

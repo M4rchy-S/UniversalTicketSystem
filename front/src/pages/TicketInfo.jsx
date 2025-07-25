@@ -143,10 +143,10 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         });
     }
 
-
+  
     useEffect(() => {
         lastMessageRef.current?.scrollIntoView({behavior: "smooth"});
-    }, [comments]);
+    }, [comments])
 
 
     if(loading)
@@ -163,9 +163,13 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
                 <h4>Title: {title}</h4>
 
-                <button type="submit" className="btn btn-primary btn-style" onClick={()=>document.getElementById('create-ticket-modal').showModal()}>
-                    Assign to ticket
-                </button>
+                {
+                    role != 'user' ?
+                        iscurrentAgent 
+                        ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-primary btn-style">Unsubscribe</button>
+                        : <button type="button" onClick={subscribe_ticket} className="btn btn-primary btn-style">Subscribe</button>
+                    : <></>
+                }
 
             </div>
 
@@ -174,159 +178,45 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                 <div className='left-chat-panel'>
 
                     <div class='chatMessages'>
-                        <div className="chat chat-start">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Obi-Wan Kenobi
-                                <time className="text-xs opacity-50">12:45</time>
-                            </div>
-                            <div className="chat-bubble">You were the Chosen One!</div>
-                            <div className="chat-footer opacity-50">Delivered</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        <div className="chat chat-start">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Obi-Wan Kenobi
-                                <time className="text-xs opacity-50">12:45</time>
-                            </div>
-                            <div className="chat-bubble">You were the Chosen One!</div>
-                            <div className="chat-footer opacity-50">Delivered</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        <div className="chat chat-start">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Obi-Wan Kenobi
-                                <time className="text-xs opacity-50">12:45</time>
-                            </div>
-                            <div className="chat-bubble">You were the Chosen One!</div>
-                            <div className="chat-footer opacity-50">Delivered</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        <div className="chat chat-end">
-                            <div className="chat-image avatar">
-                                <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS chat bubble component"
-                                        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-                                    />
-                                </div>
-                            </div>
-                            <div className="chat-header">
-                                Anakin
-                                <time className="text-xs opacity-50">12:46</time>
-                            </div>
-                            <div className="chat-bubble">I hate you!</div>
-                            <div className="chat-footer opacity-50">Seen at 12:46</div>
-                        </div>
-                        
-                        
+
+                        {
+                            comments.map((comment, index) =>
+                                parseInt(comment.user_id) == userid ?
+                                    <div key={index}>
+                                        <div className="chat chat-end">
+                                            <p className="chat-header">
+                                                {comment.name + " " + comment.last_name}
+                                            </p>
+
+                                            <p className="chat-bubble chat-color wrap-text">
+                                                {comment.text}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    :
+                                    <div key={index} >
+                                        <div className="chat chat-start">
+
+                                            <p className="chat-header">
+                                                {comment.name + " " + comment.last_name}
+                                            </p>
+
+                                            <p className="chat-bubble chat-color wrap-text">
+                                                {comment.text}
+                                            </p>
+                                        </div>
+                                    </div>
+                            )
+                        }
+
+                        <div ref={lastMessageRef}></div>
                         
                     </div>
 
                     <div class='user-input'>
 
-                        <textarea className="textarea text-no-resize" placeholder="Text input here"></textarea>
-                        <button className="btn btn-soft">Send message</button>
+                        <textarea className="textarea text-no-resize" placeholder="Text input here" value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/> 
+                        <button className="btn btn-soft" onClick={socket_send_message}>Send message</button>
 
                     </div>
 
@@ -340,95 +230,23 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     </h4>
 
                     <div className='ticket-details'>
-                        <p>Assigned agent -- Name --</p>
+                        <p>Assigned agent: 
+                            {
+                                agents.length != 0
+                                    ? agents.map(agent =>
+                                        <p>{agent.name} {agent.last_name}</p>
+                                    )
+                                    : <p>No agents yet</p>
+                            }
+                        </p>
                         <p>Created xx/xx/xx </p>
                         <p>Status status </p>
-                        <p>Description: efwafawefawef wefawfawefawfwfwfwfw </p>
+                        <p>Description: {description}</p>
                         <p>Attachements</p>
                     </div>
 
                 </div>
             </div>
-
-
-
-            <form action="" className='forms-html'>
-                <div className='form-component'>
-                    <label htmlFor="">Title</label>
-                    <input type="text" placeholder="Type here" className="input" value={title} readOnly/>
-                </div>
-                
-                <div className='form-component'>
-                    <label htmlFor="">Description</label>
-                    <ReactQuill readOnly={true} className='quill' theme="snow" value={description}/>
-                </div>
-
-                <div>
-                    <label htmlFor="">Subscribed agents</label>
-
-                    {
-                        agents.length != 0 
-                        ?   agents.map( agent => 
-                                <p>{agent.name} {agent.last_name}</p>
-                            )
-                        : <p>No agents yet</p>
-                    }
-
-                </div>
-
-                <label htmlFor="">Support Chat</label>
-                <div className='form-component chat-component'>
-
-                    {
-                       comments.map( (comment, index) => 
-                            parseInt( comment.user_id) == userid ? 
-                            <div key={index} ref={index === comments.length - 1 ? lastMessageRef : null}>
-                                <div className="chat chat-end">
-                                    <div className="chat-header">
-                                        {comment.name + " " + comment.last_name} 
-                                    </div>
-
-                                    <div className="chat-bubble chat-color">
-                                        {comment.text}
-                                    </div>
-                                </div>
-                            </div> 
-                                : 
-                            <div key={index} ref={index === comments.length - 1 ? lastMessageRef : null} >
-                                <div className="chat chat-start">
-
-                                    <div className="chat-header">
-                                        {comment.name + " " + comment.last_name} 
-                                    </div>
-
-                                    <div className="chat-bubble">
-                                        {comment.text}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        )
-                    }
-
-
-
-                </div>
-
-                <div className='form-component'>
-                    <input type="text" placeholder="Type here" className="input"  value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/>
-                    <button type='button' className="btn btn-primary" onClick={socket_send_message}>Send Message</button>
-                </div>
-
-                {
-                    role != 'user' ?
-                        iscurrentAgent 
-                        ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-warning">Unsubscribe</button>
-                        : <button type="button" onClick={subscribe_ticket} className="btn btn-warning">Subscribe</button>
-                    : <></>
-                }
-
-            </form>
-        
         </>
     )
 }

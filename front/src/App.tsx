@@ -8,11 +8,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 import UserSettings from "./pages/User-settings";
-import TicketCreate from "./pages/TicketCreate.jsx";
 import TicketInfo from "./pages/TicketInfo.jsx";
 
 import Menu from "./components/Menu.jsx";
-import Navbar from "./components/Navbar.jsx";
 
 import TicketsManage from "./pages/TicketsManage.jsx";
 import AgentsLists from "./pages/AgentLists.jsx";
@@ -89,10 +87,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home/>} />
 
-              <Route path="/user-settings" element={<UserSettings/>} />
+              <Route path="/user-settings" element={<UserSettings setLogin={setLogin}/>} />
 
               <Route path="/tickets" element={<Home/>} />
-              <Route path="/create-ticket" element={<TicketCreate/>} />
               <Route path="/ticket/:ticketId" element={<TicketInfo userid={userid} name={name} lastname={lastname} role={role}/>} />
 
 

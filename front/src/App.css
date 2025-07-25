@@ -10,6 +10,7 @@
   --danger-color: #7F1D1D;
   --main-font-color: #000000;
   --menu-color: #D1D5DB;
+  --success-color: #006044;
 }
 
 body p{
@@ -18,6 +19,8 @@ body p{
   font-style: normal;
   font-size: 14px;
   color: var(--main-font-color);
+
+  
 }
 
 label{
@@ -42,6 +45,7 @@ h3{
   font-family: var(--font);
 }
 
+
 .form-header{
   align-self:start;
   margin-left:70px;
@@ -59,6 +63,28 @@ h3{
   font-style: normal;
   font-size: 16px;
   color: var(--danger-color);
+}
+
+.danger-small{
+  margin-left: 0px;
+  font-size: 16px;
+}
+
+.danger-center{
+  align-self:center;
+  display:flex;
+  margin:0;
+}
+
+.success-text-mini{
+  display: flex;
+
+  font-family: var(--font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  align-self: flex-start;
+  color: var(--success-color);
 }
 
 .main-text{
@@ -167,7 +193,7 @@ button{
 
 .main-container{
   width:100vw;
-  height:100vw;
+  min-height:100vh;
 
   display:flex;
   flex-direction: row;
@@ -302,6 +328,7 @@ dialog button{
   flex-direction: column;
   gap:25px;
   margin-top:30px;
+  align-items: center;
 }
 
 .modal-component{
@@ -357,12 +384,12 @@ dialog button{
 
 .chatMessages{
   overflow-x: hidden;
-  overflow-y: scroll ;
+  overflow-y: auto ;
 }
 
 .right-info-panel{
   padding: 10px;
-  width:250px;
+  min-width:250px;
 
   border-top: 2px solid var(--menu-color);
   border-left: 0.5px solid var(--menu-color);
@@ -408,6 +435,100 @@ dialog button{
   transform: translate(-50%, -50%);
 }
 
+.center-page{
+  position:relative;
+  top:50%;
+  /* left:50%; */
+  /* transform: translate(-50%, -50%); */
+}
+
 .text-no-resize{
   resize: none;
+}
+
+.modal-box{
+  background-color: var(--bg-color);
+  min-width: 570px;
+  min-height: 400px;
+}
+
+.modal-component input{
+  min-width: 535px;
+  height: 48px;  
+}
+.modal-component textarea{
+  min-width: 535px;
+  height: 84px;  
+}
+
+
+.truncate-text{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrap-text{
+ word-wrap: break-word;
+ word-break: break-all;
+}
+
+.settings-container{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-self: flex-start;
+  padding-left: 50px;
+}
+
+.settings-container h3{
+  font-style: normal;
+}
+
+fieldset{
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+fieldset legend{
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+fieldset input{
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+fieldset p{
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.settings-main-page{
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  align-self: flex-start;
+}
+
+.deletion-form{
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+}
+
+.deletion-form .btn{
+  height: 55px;
+}
+
+.modal-stretch{
+  min-height: 0px;
 }

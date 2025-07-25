@@ -15,10 +15,8 @@ const Home = () =>{
     const [status, setStatus] = useState(-1);
     const [statusNames, setStatusNames] = useState(['All', 'Open', 'In Progress', 'Closed']);
 
-    function CreateTicketButton()
-    {
-        navigate('/create-ticket');
-    }
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
     function InfoTicketClick(id)
     {
@@ -37,8 +35,8 @@ const Home = () =>{
         setPage(page => page + 1);
     }
 
-    useEffect(() => {
-
+    function update_tickets_list()
+    {
         axios.get(`http://localhost:3000/api/tickets?status=${status}&page=${page}`)
         .then((response) => {
             console.log(response);
@@ -49,7 +47,28 @@ const Home = () =>{
             console.log(error);
             setLoading(false);
         });
+    }
 
+    function handle_create_ticket()
+    {
+        axios.post("http://localhost:3000/api/ticket-create", {
+            title: title,
+            description: description
+        })
+        .then(response => {
+            console.log(response.data);
+            setPage(1);
+            setStatus(-1);
+            update_tickets_list();
+            document.getElementById('create-ticket-modal').close();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    useEffect(() => {
+       update_tickets_list();
     }, [page, status])
 
    
@@ -100,7 +119,7 @@ const Home = () =>{
                             <th>№</th>
                             <th>Title</th>
                             <th>Status</th>
-                            <th>Assigned agent</th>
+                            {/* <th>Assigned agent</th> */}
                         </tr>
                     </thead>
 
@@ -110,40 +129,47 @@ const Home = () =>{
                                 <tr key={ticket.id} onClick={e => InfoTicketClick(ticket.id)}>
                                     <td>{ticket.id}</td>
                                     <td>{ticket.title}</td>
-                                    <td> <div className="badge badge-success">{ticket.status} success</div> </td>
-                                    <td>agent name</td>
+                                    <td> 
+                                        {
+                                            ticket.status == 0 &&
+                                            <div className="badge badge-success">Open</div>
+                                        }
+                                        {
+                                            ticket.status == 1 &&
+                                            <div className="badge badge-warning">In Progress</div>
+                                        }
+                                        {
+                                            ticket.status == 2 &&
+                                            <div className="badge badge-error">Closed</div>
+                                        }
+                                    </td>
+                                    {/* <td>agent name</td> */}
                                 </tr>)
                         }
                     </tbody>
                 </table>
             </div>
             
-            
-            <button className="btn btn-primary" onClick={CreateTicketButton}>
-                Create ticket
-            </button>
-            
             <dialog id="create-ticket-modal" className="modal">
-                <div className="modal-box">
+                <div className="modal-box ">
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
 
-
-                    <p>Create ticket</p>
+                    <h4>Create ticket</h4>
                     <div className="modal-form">
 
                         <div className='modal-component'>
                             <label htmlFor="">Subject</label>
-                            <input type="text" placeholder="Type here" className="input" />
+                            <input type="text" placeholder="Type here" className="input" onChange={e => setTitle(e.target.value)}/>
                         </div>
 
                         <div className='modal-component'>
                             <label htmlFor="">Message</label>
-                            <textarea className="textarea" placeholder="Bio"></textarea>
+                            <textarea className="textarea text-no-resize" placeholder="Bio" onChange={e => setDescription(e.target.value)}></textarea>
                         </div>
 
-                        <button className="btn btn-primary" onClick={()=>document.getElementById('create-ticket-modal').close()}>
+                        <button className="btn btn-primary" onClick={ handle_create_ticket }>
                             Create
                         </button>
 

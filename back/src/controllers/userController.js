@@ -111,7 +111,7 @@ exports.createUser = async (req, res) => {
 
     res.status(201).send();
   } catch (err) {
-    res.status(500).json({ errors: err });
+    res.status(500).json({ errors: "Error happened" });
   }
 };
 
@@ -188,7 +188,7 @@ exports.deleteYourself = async (req, res) => {
 
     return res.status(204).send();
   } catch (err) {
-    return res.status(500).json({ error: "Error happened" });
+    return res.status(500).json({ error: err });
   }
 };
 
