@@ -5,6 +5,7 @@ const commentsController = require('../controllers/commentsController');
 const ticketsController = require('../controllers/ticketsController');
 const { query, body } = require('express-validator');
 const { validate } = require('../middlewares/validate');
+const upload = require('./../config/files-config');
 
 //  Users
 router.get('/users', userController.getUsers);
@@ -54,9 +55,12 @@ router.delete('/delete-account', userController.deleteYourself);
 router.post('/user-logout', userController.logOut);
 
 //  Tickets
-router.post('/ticket-create', 
-    body('title').notEmpty().isLength({max: 250}).withMessage("Incorrect Title Field"),
-    body('description').notEmpty().withMessage("Incorrect description field"),
+router.post('/ticket-create',
+    upload.array('image', 5), 
+    [
+        body('title').notEmpty().isLength({ max: 250 }).withMessage("Incorrect Title Field"),
+        body('description').notEmpty().withMessage("Incorrect description field"),
+    ],
     validate,
     ticketsController.CreateTicket);
 

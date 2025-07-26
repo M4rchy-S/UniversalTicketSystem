@@ -1,7 +1,18 @@
 const pool = require('../config/db');
 
+
 //  Tickets
 exports.CreateTicket = async (req, res) => {
+
+    const images_filenames = [];
+
+    for(let i = 0; i < req.files.length; i++)
+    {
+        images_filenames.push( req.files[i].filename );
+    }
+
+    // console.log(images_filenames);
+
     try {
         if(!req.session.email )
             return res.status(400).json({msg: "Not authorised"});
@@ -9,9 +20,9 @@ exports.CreateTicket = async (req, res) => {
         const { title, description } = req.body;
         const author_id = req.session.user_id;
 
-        const result = await pool.query('INSERT INTO tickets (title, description, status, author_id) VALUES ($1, $2, $3, $4) RETURNING *', [title, description, 0, author_id]);
+        const result = await pool.query('INSERT INTO tickets (title, description, status, author_id, images) VALUES ($1, $2, $3, $4, $5) RETURNING *', [title, description, 0, author_id, images_filenames.join(';')]);
 
-        res.status(200).json(result.rows[0]);
+        return res.status(200).send();
     } catch (err) {
         return res.status(500).json({ error: "Error happened" });
     }

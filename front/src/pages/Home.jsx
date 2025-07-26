@@ -18,6 +18,8 @@ const Home = () =>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
+    const [files, setFiles] = useState([]);
+
     function InfoTicketClick(id)
     {
         navigate(`/ticket/${id}`);
@@ -51,10 +53,24 @@ const Home = () =>{
 
     function handle_create_ticket()
     {
-        axios.post("http://localhost:3000/api/ticket-create", {
-            title: title,
-            description: description
-        })
+
+        const url = "http://localhost:3000/api/ticket-create";
+        const formData = new FormData();
+        
+        formData.append('title', title);
+        formData.append('description', description);
+
+        [...files].forEach((file, index) => {
+            formData.append(`image`, file);
+        });
+
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+        };
+
+        axios.post(url, formData, config)
         .then(response => {
             console.log(response.data);
             setPage(1);
@@ -99,8 +115,8 @@ const Home = () =>{
                     {
                         statusNames.map( ( title, index) => 
                             index - 1 == status 
-                                ? <div role="tab" className="tab tab-active"><h4>{title}</h4></div>
-                                : <div role="tab" className="tab" onClick={e => { setStatus(index-1); setPage(1)}}><h4>{title}</h4></div>
+                                ? <div key={index} role="tab" className="tab tab-active"><h4>{title}</h4></div>
+                                : <div key={index} role="tab" className="tab" onClick={e => { setStatus(index-1); setPage(1)}}><h4>{title}</h4></div>
                         )
                     }
                 </div>
@@ -151,7 +167,7 @@ const Home = () =>{
             </div>
             
             <dialog id="create-ticket-modal" className="modal">
-                <div className="modal-box ">
+                <div className="modal-box">
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
@@ -168,6 +184,8 @@ const Home = () =>{
                             <label htmlFor="">Message</label>
                             <textarea className="textarea text-no-resize" placeholder="Bio" onChange={e => setDescription(e.target.value)}></textarea>
                         </div>
+
+                        <input className="file-input" type="file" multiple onChange={event => setFiles(event.target.files)} accept='image/*'/>
 
                         <button className="btn btn-primary" onClick={ handle_create_ticket }>
                             Create

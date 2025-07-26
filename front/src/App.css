@@ -390,6 +390,7 @@ dialog button{
 .right-info-panel{
   padding: 10px;
   min-width:250px;
+  max-width:300px;
 
   border-top: 2px solid var(--menu-color);
   border-left: 0.5px solid var(--menu-color);
@@ -531,4 +532,34 @@ fieldset p{
 
 .modal-stretch{
   min-height: 0px;
+}
+
+.images-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.attach-images{
+  width:86px;
+  height:86px;
+  border-radius: 8px;
+}
+
+.attach-images:hover{
+  border: 1px solid var(--main-font-color);
+  scale: 1.1;
+  transition: all 0.25s ease;
+}
+
+
+.modal-image-center{
+  margin: 0 auto;
+  margin-top:20px;
+}
+
+.image-modal{
+  min-width: 750px;
+  min-height: 500px;
 }

@@ -13,6 +13,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [images, setImages] = useState([]);
 
     const [socket, setSocket] = useState(null);
 
@@ -23,6 +24,8 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     const [commentMessage, setCommentMessage] = useState("");
 
     const lastMessageRef = useRef(null);
+
+    const [modalImageString, setModalImageString]  = useState("text");
 
     const [agents, setAgents] = useState([]);
 
@@ -39,6 +42,14 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
             const subscribers = response.data.subscribers;
 
             setAgents(subscribers);
+
+            const file_paths = ticketInfo.images.split(';');
+            for(let i = 0; i < file_paths.length; i++)
+            {
+                file_paths[i] = 'http://localhost:3000/images/' + file_paths[i]; 
+            }
+
+            setImages(file_paths);
 
             setTitle(ticketInfo.title);
             setDescription(ticketInfo.description);
@@ -143,6 +154,13 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         });
     }
 
+    function handle_image_modal(event)
+    {
+        setModalImageString(event.target.src);
+
+        document.getElementById('image_modal').showModal();
+    }
+
   
     useEffect(() => {
         lastMessageRef.current?.scrollIntoView({behavior: "smooth"});
@@ -177,7 +195,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
                 <div className='left-chat-panel'>
 
-                    <div class='chatMessages'>
+                    <div className='chatMessages'>
 
                         {
                             comments.map((comment, index) =>
@@ -213,7 +231,7 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                         
                     </div>
 
-                    <div class='user-input'>
+                    <div className='user-input'>
 
                         <textarea className="textarea text-no-resize" placeholder="Text input here" value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/> 
                         <button className="btn btn-soft" onClick={socket_send_message}>Send message</button>
@@ -230,23 +248,46 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     </h4>
 
                     <div className='ticket-details'>
-                        <p>Assigned agent: 
+                        <div>Assigned agent: 
                             {
                                 agents.length != 0
-                                    ? agents.map(agent =>
-                                        <p>{agent.name} {agent.last_name}</p>
+                                    ? agents.map(( agent, index ) =>
+                                        <p key={index}>
+                                            {agent.name} {agent.last_name}
+                                        </p>
                                     )
-                                    : <p>No agents yet</p>
+                                    :
+                                    <p>
+                                        No agents yet
+                                    </p>
                             }
-                        </p>
+                        </div>
                         <p>Created xx/xx/xx </p>
                         <p>Status status </p>
                         <p>Description: {description}</p>
                         <p>Attachements</p>
+
+                        <div className='images-container'>
+                            {
+                                images.map((image, index) =>
+                                    <img className='attach-images' key={index} src={image} alt="" onClick={e => handle_image_modal(e)} />
+                                )
+                            }
+                        </div>
+
                     </div>
 
                 </div>
             </div>
+
+            <dialog id="image_modal" className="modal">
+                <div className="modal-box image-modal">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <img  className='modal-image-center' src={modalImageString} alt="" />
+                </div>
+            </dialog>
         </>
     )
 }
