@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS public.tickets
     description text NOT NULL,
     status INT NOT NULL,
     author_id int NOT NULL,
+	images text,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
 	CONSTRAINT fk_author
