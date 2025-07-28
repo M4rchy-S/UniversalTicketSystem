@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS public.comments
     PRIMARY KEY (id),
 	CONSTRAINT fk_ticket
 		FOREIGN KEY(ticket_id)
-			REFERENCES tickets(id),
+			REFERENCES tickets(id) ON DELETE CASCADE,
 	CONSTRAINT fk_user
 		FOREIGN KEY(user_id)
 			REFERENCES users(id) ON DELETE CASCADE
