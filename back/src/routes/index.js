@@ -8,7 +8,10 @@ const { validate } = require('../middlewares/validate');
 const upload = require('./../config/files-config');
 
 //  Users
-router.get('/users', userController.getUsers);
+router.get('/users', 
+    query('page').notEmpty().isInt().withMessage("Incorrect page search field"),
+    validate,
+    userController.getUsers);
 
 router.get('/user-info',
     userController.getPeersonalUserInfo);
@@ -75,7 +78,9 @@ router.put('/ticket-update-status',
     validate,
     ticketsController.ChangeTicketStatus);
 
-router.get('/tickets-all', 
+router.get('/tickets-all',
+    query('status').notEmpty().isInt().withMessage("Incorrect status search field"),
+    query('page').notEmpty().isInt().withMessage("Incorrect page search field"),
     validate,
     ticketsController.GetAllTickets);
 

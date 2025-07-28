@@ -8,9 +8,15 @@ exports.getUsers = async (req, res) => {
     if(req.session.role != "admin")
       return res.status(400).json({msg: "Permission denied"});
 
-    const result = await pool.query("SELECT id,name, last_name, email, role FROM users WHERE role != 'admin' ");
+    const {page} = req.query;
+    if(page < 1)
+      throw "Invalid page field";
+
+    const result = await pool.query("SELECT id,name, last_name, email, role FROM users WHERE role != 'admin' LIMIT 10 OFFSET $1", [(page-1) * 10]);
+
     res.status(200).json(result.rows);
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ error: "Error happened" });
   }
 };
@@ -188,7 +194,7 @@ exports.deleteYourself = async (req, res) => {
 
     return res.status(204).send();
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error happened" });
   }
 };
 

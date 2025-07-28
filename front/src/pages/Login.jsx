@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router';
 
 import { useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
+
 const Login = ({setLogin}) =>{
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -15,6 +17,8 @@ const Login = ({setLogin}) =>{
     const [dangerText, setDangerText] = useState("");
 
     const [loading, setLoading] = useState(false);
+
+    const {t} = useTranslation();
 
 
     const handleLogin = (event) =>
@@ -51,7 +55,7 @@ const Login = ({setLogin}) =>{
 
 
                 <h1 className="form-header">
-                    Log in to your account
+                    { t('Log in to your account') }
                 </h1>
 
                 {
@@ -63,29 +67,29 @@ const Login = ({setLogin}) =>{
 
                 <form action="" className='forms-html' onSubmit={handleLogin}>
                     <div className='form-component'>
-                        <label htmlFor="">Your email</label>
+                        <label htmlFor="">{ t('Your email') }</label>
                         <input  type="text" placeholder="Type here" className="input main_input" onChange={(e) => setEmail(e.target.value)}/>
                     </div>
 
                     <div className='form-component'>
-                        <label htmlFor="">Your password</label>
+                        <label htmlFor="">{ t('Your password') }</label>
                         <input  type="password" placeholder="Type here" className="input main_input" onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     
                     <div className="right-helper">
                         <a className='link'>
-                            Forgot password?
+                            { t('Forgot password?') }
                         </a>
                     </div>
 
                     <button type="submit" className="btn btn-primary big_button">
-                        Log in
+                        { t('Log in') }
                     </button>
 
                     <div>
-                        Don't have an account?<span> </span>
+                        { t('Don\'t have an account?') }<span> </span>
                         <Link  to='/register' role="tab" className="link">
-                            Sign Up
+                            { t('Sign Up') }
                         </Link>
                     </div>
 

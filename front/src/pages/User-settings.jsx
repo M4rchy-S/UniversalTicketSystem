@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const UserSettings = ({setLogin}) =>{
     const navigate = useNavigate();
@@ -20,6 +21,21 @@ const UserSettings = ({setLogin}) =>{
     const [dangerPassword, setDangerPassword] = useState(false);
     const [loadingState1, setLoadingState1] = useState(false);
 
+    const [language, setLanguage] = useState("");
+
+    const {t, i18n} = useTranslation();
+
+    const langs = [
+        {
+            native:"English",
+            code: "en"
+        },
+        {
+            native: "Русский",
+            code: "ru"
+        }
+    ];
+
     useEffect(() => {
         axios.get("http://localhost:3000/api/user-info")
             .then((response) => {
@@ -29,6 +45,16 @@ const UserSettings = ({setLogin}) =>{
                 setRole(response.data.role);
 
                 setLoading(false);
+                
+                for(let i =0; i < langs.length; i++)
+                {
+                    if(langs[i].code === i18n.resolvedLanguage)
+                    {
+                        setLanguage(langs[i].native);
+                        break;
+                    }
+                }
+
             })
             .catch((error) => {
                 setLoading(false);
@@ -89,6 +115,19 @@ const UserSettings = ({setLogin}) =>{
 
     }
 
+    function changeLanguage(languageSelected)
+    {
+        for(let i = 0; i < langs.length; i++)
+        {
+            if(langs[i].native == languageSelected)
+            {
+                i18n.changeLanguage(langs[i].code);
+                localStorage.setItem('lang', langs[i].code);
+                break;
+            }
+        }
+    }
+
     if(loading)
         return(
           <>
@@ -100,7 +139,7 @@ const UserSettings = ({setLogin}) =>{
         <>
             <div className='home-title'>
                 <h2>
-                    Settings
+                    {t('Settings')}
                 </h2>
             </div>
 
@@ -110,19 +149,27 @@ const UserSettings = ({setLogin}) =>{
 
                 <div className='settings-container'>
 
-                    <h3>Profile details</h3>
+                    <h3>
+                        {t('Profile details')}
+                    </h3>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Name</legend>
+                        <legend className="fieldset-legend">
+                            {t('Name')}
+                        </legend>
                         <input type="text" className="input" placeholder="Type here" value={name} onChange={e => setName(e.target.value)}/>
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Last Name</legend>
+                        <legend className="fieldset-legend">
+                            {t('Last Name')}
+                        </legend>
                         <input type="text" className="input" placeholder="Type here" value={lastname} onChange={e => setLastname(e.target.value)}/>
                     </fieldset>
 
-                    <button className="btn btn-primary" onClick={handleChangeName}>Save changes</button>
+                    <button className="btn btn-primary" onClick={handleChangeName}>
+                        {t('Save changes')}
+                    </button>
                     
                     {
                         danger &&
@@ -135,13 +182,30 @@ const UserSettings = ({setLogin}) =>{
                             <p className='success-text-mini'>Data was updated successfully</p>
                     }
 
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend">
+                            {t('Language')}
+                        </legend>
+                        <select defaultValue={language} className="select" onChange={e => changeLanguage(e.target.value)}>
+                            {
+                               langs.map(lang => 
+                                    <option>{lang.native}</option>
+                               )
+                            }
+                        </select>
+                    </fieldset>
+
                 </div>
 
                 <div className='settings-container'>
-                    <h3>Account Settings</h3>
+                    <h3>
+                        {t('Account Settings')}
+                    </h3>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Email</legend>
+                        <legend className="fieldset-legend">
+                            {t('Email')}
+                        </legend>
                         <p>
                             <i>
                                 {email}
@@ -150,7 +214,9 @@ const UserSettings = ({setLogin}) =>{
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Role</legend>
+                        <legend className="fieldset-legend">
+                            {t('Role')}
+                        </legend>
                         <p>
                             <i>
                                 {role}
@@ -159,11 +225,11 @@ const UserSettings = ({setLogin}) =>{
                     </fieldset>
 
                     <button className="btn btn-soft btn-info" onClick={()=>document.getElementById('change-password-modal').showModal()}>
-                        Change password
+                        {t('Change password')}
                     </button>
 
                     <button className="btn btn-soft btn-error" onClick={()=>document.getElementById('delete-account-modal').showModal()}>
-                        Delete account
+                        {t('Delete account')}
                     </button>
                 </div>
 
@@ -209,7 +275,7 @@ const UserSettings = ({setLogin}) =>{
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
 
-                    <h4>Account removal</h4>
+                    <h4>Are you sure you want to delete your account</h4>
                     <div className="modal-form deletion-form">
 
                         <button className="btn btn-outline btn-error" onClick={deleteAccount}>

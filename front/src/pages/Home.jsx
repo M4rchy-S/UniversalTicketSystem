@@ -3,6 +3,9 @@ import './pages.css';
 import {useNavigate} from 'react-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import SwitchPage from '../components/SwichPage';
+import SwitchStatus from '../components/SwitchStatus';
+import { useTranslation } from 'react-i18next';
 
 
 const Home = () =>{
@@ -13,28 +16,17 @@ const Home = () =>{
 
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState(-1);
-    const [statusNames, setStatusNames] = useState(['All', 'Open', 'In Progress', 'Closed']);
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
     const [files, setFiles] = useState([]);
 
+    const {t} = useTranslation();
+
     function InfoTicketClick(id)
     {
         navigate(`/ticket/${id}`);
-    }
-
-    function LeftClickPage()
-    {
-        if(page == 1)
-            return;
-        setPage(page => page - 1);
-    }
-
-    function RightClickPage()
-    {
-        setPage(page => page + 1);
     }
 
     function update_tickets_list()
@@ -101,40 +93,36 @@ const Home = () =>{
 
             <div className='home-title'>
                 <h2>
-                    Your tickets   
+                    {t('Your tickets')}
                 </h2>
                 <button type="submit" className="btn btn-primary btn-style" onClick={()=>document.getElementById('create-ticket-modal').showModal()}>
-                    Create ticket
+                    {t('Create ticket')}
                 </button>
             </div>
 
             <div className="divider"></div>
 
             <div className='home-filters'>
-                <div role="tablist" className="tabs tabs-lift filters">
-                    {
-                        statusNames.map( ( title, index) => 
-                            index - 1 == status 
-                                ? <div key={index} role="tab" className="tab tab-active"><h4>{title}</h4></div>
-                                : <div key={index} role="tab" className="tab" onClick={e => { setStatus(index-1); setPage(1)}}><h4>{title}</h4></div>
-                        )
-                    }
-                </div>
+                
+                <SwitchStatus setPage={setPage} status={status} setStatus={setStatus}/>
 
-                <div className="join pagination">
-                    <button className="join-item btn" onClick={e => LeftClickPage()}>«</button>
-                    <button className="join-item btn page-button">Page {page}</button>
-                    <button className="join-item btn" onClick={e => RightClickPage()}>»</button>
-                </div>
+                <SwitchPage page={page} setPage={setPage} />
+               
             </div>
 
             <div className="overflow-x-auto tickets-table home-table-content">
                 <table className="table ">
                     <thead>
                         <tr>
-                            <th>№</th>
-                            <th>Title</th>
-                            <th>Status</th>
+                            <th>
+                                №
+                            </th>
+                            <th>
+                                {t('Title')}
+                            </th>
+                            <th>
+                                {t('Status')}
+                            </th>
                             {/* <th>Assigned agent</th> */}
                         </tr>
                     </thead>
@@ -172,23 +160,29 @@ const Home = () =>{
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
 
-                    <h4>Create ticket</h4>
+                    <h4>
+                        {t('Create ticket')}
+                    </h4>
                     <div className="modal-form">
 
                         <div className='modal-component'>
-                            <label htmlFor="">Subject</label>
+                            <label htmlFor="">
+                                {t('Subject')}
+                            </label>
                             <input type="text" placeholder="Type here" className="input" onChange={e => setTitle(e.target.value)}/>
                         </div>
 
                         <div className='modal-component'>
-                            <label htmlFor="">Message</label>
+                            <label htmlFor="">
+                                {t('Message')}
+                            </label>
                             <textarea className="textarea text-no-resize" placeholder="Bio" onChange={e => setDescription(e.target.value)}></textarea>
                         </div>
 
                         <input className="file-input" type="file" multiple onChange={event => setFiles(event.target.files)} accept='image/*'/>
 
                         <button className="btn btn-primary" onClick={ handle_create_ticket }>
-                            Create
+                            {t('Create')}
                         </button>
 
                     </div>

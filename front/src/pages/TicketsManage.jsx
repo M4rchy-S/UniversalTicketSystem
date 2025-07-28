@@ -3,12 +3,20 @@ import './pages.css';
 import {useNavigate} from 'react-router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import SwitchPage from '../components/SwichPage';
+import SwitchStatus from '../components/SwitchStatus';
+import { useTranslation } from 'react-i18next';
 
 
 const TicketsManage = () =>{
     const [loading, setLoading] = useState(true);
     const [tickets, setTickets] = useState([]);
     const navigate = useNavigate();
+
+    const [page, setPage] = useState(1)
+    const [status, setStatus] = useState(-1);
+
+    const {t} = useTranslation();
 
     function InfoTicketClick(id)
     {
@@ -63,7 +71,7 @@ const TicketsManage = () =>{
     }
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/tickets-all")
+        axios.get(`http://localhost:3000/api/tickets-all?status=${status}&page=${page}`)
         .then((response) => {
     
             console.log(response.data);
@@ -76,7 +84,7 @@ const TicketsManage = () =>{
             console.log(error);
             setLoading(false);
         });
-    }, [tickets]);
+    }, [status, page]);
 
     
 
@@ -86,18 +94,35 @@ const TicketsManage = () =>{
     return(
         <>
             
-            <h2 className='title'>
-                Tickets Manager
-            </h2>
+            <div className='home-title'>
+                <h2>
+                    {t('Tickets manager')}
+                </h2>
+               
+            </div>
 
-            <div className="overflow-x-auto tickets-table">
+            <div className="divider"></div>
+
+            <div className='home-filters'>
+                
+                <SwitchStatus setPage={setPage} status={status} setStatus={setStatus} />
+
+                <SwitchPage page={page} setPage={setPage} />
+               
+            </div>
+
+            <div className="overflow-x-auto tickets-table home-table-content">
                 <table className="table">
                     {/* head */}
                     <thead>
                     <tr>
                         <th>№</th>
-                        <th>Title</th>
-                        <th>Status</th>
+                        <th>
+                            {t('Title')}
+                        </th>
+                        <th>
+                            {t('Status')}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -105,17 +130,25 @@ const TicketsManage = () =>{
                     {
                         tickets.map( ticket => 
                             <tr key={ticket.id} className="hover:bg-base-300">
-                                <th>{ticket.id}</th>
+                                <td>{ticket.id}</td>
                                 <td className='clickable' onClick={e => InfoTicketClick(ticket.id)}>{ticket.title}</td>
                                 <td> 
                                     <select defaultValue={ticket.status} className="select select-primary selection-menu" onChange={e => { handleChangeStatus(ticket.id, e.target.value);}}>
-                                        <option value='0'>Opened</option>
-                                        <option value='1'>In Progress</option>
-                                        <option value='2'>Closed</option>
+                                        <option value='0'>
+                                            {t('Opened')}
+                                        </option>
+                                        <option value='1'>
+                                            {t('In Progress')}
+                                        </option>
+                                        <option value='2'>
+                                            {t('Closed')}
+                                        </option>
                                     </select>
                                 </td>
                                 <td >
-                                    <button className="btn btn-error del-btn" onClick={e => handleDeleteTicket(ticket.id)}>Delete</button>
+                                    <button className="btn btn-error del-btn" onClick={e => handleDeleteTicket(ticket.id)}>
+                                        {t('Delete')}
+                                    </button>
                                 </td>
                             </tr>)
                     }

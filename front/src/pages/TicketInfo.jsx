@@ -3,11 +3,8 @@ import { useParams } from 'react-router';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { useTranslation } from 'react-i18next';
 
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
-
-import '../components/quill.css'
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
     const [loading, setLoading] = useState(true);
@@ -30,6 +27,8 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     const [agents, setAgents] = useState([]);
 
     const [iscurrentAgent, setIscurrentagent] = useState(false);
+
+    const {t} = useTranslation();
 
     //  Get ticket info
     useEffect(() => {
@@ -176,16 +175,20 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
         <>
             <div className='home-title ticket-info-title'>
                 <h4>
-                    Ticket Information 
+                    {t('Ticket Information')}
                 </h4>
 
-                <h4>Title: {title}</h4>
+                <h4>{t('Title-ticket')} : {title}</h4>
 
                 {
                     role != 'user' ?
                         iscurrentAgent 
-                        ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-primary btn-style">Unsubscribe</button>
-                        : <button type="button" onClick={subscribe_ticket} className="btn btn-primary btn-style">Subscribe</button>
+                        ? <button type="button" onClick={unsubscribe_ticket} className="btn btn-primary btn-style">
+                            {t('Unsubscribe')}
+                        </button>
+                        : <button type="button" onClick={subscribe_ticket} className="btn btn-primary btn-style">
+                            {t('Subscribe')}
+                        </button>
                     : <></>
                 }
 
@@ -234,7 +237,9 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     <div className='user-input'>
 
                         <textarea className="textarea text-no-resize" placeholder="Text input here" value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/> 
-                        <button className="btn btn-soft" onClick={socket_send_message}>Send message</button>
+                        <button className="btn btn-soft" onClick={socket_send_message}>
+                            {t('Send message')}
+                        </button>
 
                     </div>
 
@@ -244,11 +249,12 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
                 <div className='right-info-panel'>
                     <h4>
-                        Ticket Details
+                        {t('Ticket Details')}
                     </h4>
 
                     <div className='ticket-details'>
-                        <div>Assigned agent: 
+                        <div>
+                            {t('Assigned agent')}: 
                             {
                                 agents.length != 0
                                     ? agents.map(( agent, index ) =>
@@ -262,10 +268,10 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                     </p>
                             }
                         </div>
-                        <p>Created xx/xx/xx </p>
-                        <p>Status status </p>
-                        <p>Description: {description}</p>
-                        <p>Attachements</p>
+                        <p>{t('Created')} xx/xx/xx </p>
+                        <p>{t('Status')} status </p>
+                        <p>{t('Description')}: {description}</p>
+                        <p>{t('Attachements')}</p>
 
                         <div className='images-container'>
                             {

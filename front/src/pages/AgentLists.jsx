@@ -1,13 +1,17 @@
 import React from 'react';
 import './pages.css';
-import {useNavigate} from 'react-router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import SwitchPage from '../components/SwichPage';
+import { useTranslation } from 'react-i18next';
 
 const AgentLists = () =>{
-    const navigate = useNavigate();
     const [agents, setAgents] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const [page, setPage] = useState(1);
+
+    const {t} = useTranslation();
 
     const handleChangeRole = (id, newRole) =>
     {
@@ -26,7 +30,7 @@ const AgentLists = () =>{
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/users")
+        axios.get(`http://localhost:3000/api/users?page=${page}`)
         .then((response) => {
     
             console.log(response.data);
@@ -40,7 +44,7 @@ const AgentLists = () =>{
             console.log(error);
             setLoading(false);
         })
-    }, []);
+    }, [page]);
 
     if(loading)
         return(<span className="loading loading-spinner loading-xl"></span>)
@@ -48,9 +52,24 @@ const AgentLists = () =>{
     return(
         <>
             
-            <h2 className='title'>
-                Manage Agents
-            </h2>
+            <div className='home-title'>
+                <h2>
+                    {t('User administration')}
+                </h2>
+               
+            </div>
+
+            <div className="divider"></div>
+
+            <div className='home-filters'>
+
+                <div>
+
+                </div>
+                
+                <SwitchPage page={page} setPage={setPage} />
+               
+            </div>
 
             <div className="overflow-x-auto tickets-table">
                 <table className="table">
@@ -58,10 +77,18 @@ const AgentLists = () =>{
                     <thead>
                     <tr>
                         <th>№</th>
-                        <th>Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
+                        <th>
+                            {t('Name')}
+                        </th>
+                        <th>
+                           {t('Last Name')}
+                        </th>
+                        <th>
+                            {t('Email')}
+                        </th>
+                        <th>
+                            {t('Role')}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,14 +96,18 @@ const AgentLists = () =>{
                     {
                         agents.map( (agent, index) => 
                             <tr key={agent.id} className="hover:bg-base-300">
-                                <th>{index + 1}</th>
+                                <td>{index + 1}</td>
                                 <td>{agent.name}</td>
                                 <td>{agent.last_name}</td>
                                 <td>{agent.email}</td>
                                 <td>
                                     <select defaultValue={agent.role} className="select select-primary selection-menu" onChange={(e) => handleChangeRole(agent.id, e.target.value)}>
-                                        <option value='user'>User</option>
-                                        <option value='agent'>Agent</option>
+                                        <option value='user'>
+                                            {t('User')}
+                                        </option>
+                                        <option value='agent'>
+                                            {t('Agent')}
+                                        </option>
                                     </select>
                                 </td>
                             </tr>)

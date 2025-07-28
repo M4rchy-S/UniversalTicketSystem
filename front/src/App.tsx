@@ -21,6 +21,8 @@ axios.defaults.withCredentials = true;
 
 import {useState, useEffect} from 'react';
 
+import { useTranslation } from 'react-i18next';
+
 
 function App() {
   const [login, setLogin] = useState(false);
@@ -30,6 +32,15 @@ function App() {
   const [userid, setUserid] = useState("");
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
+
+  const {t, i18n} = useTranslation();
+
+  useEffect(() => {
+    if(localStorage.getItem('lang')!= null)
+    {
+      i18n.changeLanguage(localStorage.getItem('lang'));
+    }
+  }, []);
 
 
   useEffect(() => {

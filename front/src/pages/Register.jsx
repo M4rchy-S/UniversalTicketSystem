@@ -4,6 +4,8 @@ import {Link} from 'react-router';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 
+import { useTranslation } from 'react-i18next';
+
 const Register = ({setLogin}) =>{
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -16,6 +18,8 @@ const Register = ({setLogin}) =>{
     const [dangerText, setDangerText] = useState("");
 
     const [loading, setLoading] = useState(false);
+
+    const {t} = useTranslation();
 
     const handleRegister = (event) =>
     {
@@ -54,7 +58,7 @@ const Register = ({setLogin}) =>{
 
 
                 <h1 className="form-header">
-                    Create an account
+                    { t('Create an account') }
                 </h1>
 
                 {
@@ -68,42 +72,54 @@ const Register = ({setLogin}) =>{
 
                 <form action="" className='forms-html' onSubmit={handleRegister}>
                     <div className='form-component'>
-                        <label htmlFor="">Your email</label>
+                        <label htmlFor="">
+                            { t('Your email') }
+                        </label>
                         <input type="text" placeholder="Type here" className="input main_input" onChange={(e) => setEmail(e.target.value)}/>
                     </div>
 
                     <div className='form-component'>
-                        <label htmlFor="">Your password</label>
+                        <label htmlFor="">
+                            {t('Your password')}
+                        </label>
                         <input type="password" placeholder="Type here" className="input main_input" onChange={(e) => setPassword(e.target.value)}/>
                     </div>
 
                     <div className='form-component'>
-                        <label htmlFor="">Repeat your password</label>
+                        <label htmlFor="">
+                            {t('Repeat your password')}
+                        </label>
                         <input type="password" placeholder="Type here" className="input main_input" onChange={(e) => setRepPassword(e.target.value)}/>
                     </div>
 
                     <p className="hint-text">
                         {/* Use at least 8 characters, including 1 number and 1 special character (e.g., ! @ # $ % & ). */}
-                        Use at least 8 characters.
+                        { t('Use at least 8 characters.') } 
                     </p>
 
                     <div className='form-component'>
-                        <label htmlFor="">Your Name</label>
+                        <label htmlFor="">
+                            { t('Your Name') }
+                        </label>
                         <input type="text" placeholder="Type here" className="input main_input" onChange={(e) => setName(e.target.value)}/>
                     </div>
 
                     <div className='form-component'>
-                        <label htmlFor="">Your Last Name</label>
+                        <label htmlFor="">
+                            { t('Your Last Name') }
+                        </label>
                         <input type="text" placeholder="Type here" className="input main_input" onChange={(e) => setLastName(e.target.value)}/>
                     </div>
 
                     <button type="submit" className="btn btn-primary big_button">
-                        Register account
+                        { t('Register account') }
                     </button>
 
                     <div>
-                        Already have an account? <span> </span>
-                        <Link to='/login' role="tab" className="link">Log in</Link>
+                        { t('Already have an account?')} <span> </span>
+                        <Link to='/login' role="tab" className="link">
+                            { t('Log in') }
+                        </Link>
                     </div>
 
                     {

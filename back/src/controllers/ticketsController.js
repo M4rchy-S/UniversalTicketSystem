@@ -63,30 +63,31 @@ try {
 };
 
 exports.GetAllTickets = async (req, res) => {
-try {
-    if(req.session.role == 'user' )
-    return res.status(400).json({msg: "Permission denied"});
+    try {
+        if (req.session.role == 'user')
+            return res.status(400).json({ msg: "Permission denied" });
 
-    const { status } = req.query;
+        const { status, page } = req.query;
 
-    let result = null;
+        if(page < 1)
+            throw "Invalud page field";
+        if(status < -1 || status > 2)
+            throw "Invalid status field";
 
-    if(status == null)
-    {
-    result = await pool.query("SELECT * FROM tickets ORDER BY created_at DESC");
+        let result = null;
+
+        if (status == -1) {
+            result = await pool.query("SELECT * FROM tickets ORDER BY created_at DESC LIMIT 10 OFFSET $1", [(page-1) * 10]);
+        }
+        else {
+            result = await pool.query("SELECT * FROM tickets WHERE status = $1 ORDER BY created_at DESC LIMIT 10 OFFSET $2", [status, (page-1) * 10]);
+        }
+
+        return res.status(200).json(result.rows);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: "Error happened" });
     }
-    else
-    {
-    if(parseInt(status) < 0 || parseInt(status) > 2)
-        throw "Invalid status";
-
-    result = await pool.query("SELECT * FROM tickets WHERE status = $1 ORDER BY created_at DESC", [status]);
-    }
-
-    return res.status(200).json(result.rows);
-} catch (err) {
-    return res.status(500).json({ error: "Error happened" });
-}
 };
 
 exports.GetTicketInfo = async (req, res) => {
