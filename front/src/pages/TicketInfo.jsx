@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
+import SmartBadge from '../components/SmartBadge';
 
 
 const TicketInfo = ({userid, name, lastname, role}) =>{
@@ -11,6 +12,8 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [images, setImages] = useState([]);
+    const [date, setDate] = useState("");
+    const [status, setStatus] = useState(0);
 
     const [socket, setSocket] = useState(null);
 
@@ -42,16 +45,18 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
             setAgents(subscribers);
 
-            const file_paths = ticketInfo.images.split(';');
-            for(let i = 0; i < file_paths.length; i++)
-            {
-                file_paths[i] = 'http://localhost:3000/images/' + file_paths[i]; 
+            if (ticketInfo.images.length != 0) {
+                const file_paths = ticketInfo.images.split(';');
+                for (let i = 0; i < file_paths.length; i++) {
+                    file_paths[i] = 'http://localhost:3000/images/' + file_paths[i];
+                }
+                setImages(file_paths);
             }
-
-            setImages(file_paths);
-
+                
             setTitle(ticketInfo.title);
             setDescription(ticketInfo.description);
+            setDate(ticketInfo.created_at);
+            setStatus(ticketInfo.status);
 
             for(let i = 0; i < subscribers.length; i++)
             {
@@ -107,6 +112,12 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
     {
         if(socket == null)
             return;
+        
+        if(commentMessage.length > 512)
+        {
+            alert("Maximum character size is 512");
+            return;
+        }
 
         socket.emit('send_message', { 
             msg: commentMessage,
@@ -178,7 +189,10 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                     {t('Ticket Information')}
                 </h4>
 
-                <h4>{t('Title-ticket')} : {title}</h4>
+                <h4 className='truncate-text title-ticket' >
+                    {t('Title-ticket')} : 
+                    {title}
+                </h4>
 
                 {
                     role != 'user' ?
@@ -236,10 +250,16 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
 
                     <div className='user-input'>
 
-                        <textarea className="textarea text-no-resize" placeholder="Text input here" value={commentMessage} onChange={e => setCommentMessage(e.target.value)}/> 
-                        <button className="btn btn-soft" onClick={socket_send_message}>
-                            {t('Send message')}
-                        </button>
+                        {
+                            status != 2 &&
+                            <>
+                                <textarea className="textarea text-no-resize" placeholder="Text input here" value={commentMessage} onChange={e => setCommentMessage(e.target.value)} />
+                                <button className="btn btn-soft" onClick={socket_send_message}>
+                                    {t('Send message')}
+                                </button>
+                            </>
+                        }
+
 
                     </div>
 
@@ -268,9 +288,19 @@ const TicketInfo = ({userid, name, lastname, role}) =>{
                                     </p>
                             }
                         </div>
-                        <p>{t('Created')} xx/xx/xx </p>
-                        <p>{t('Status')} status </p>
-                        <p>{t('Description')}: {description}</p>
+                        <p>
+                            {t('Created')} <span> </span>
+                            {date} 
+                        </p>
+                        <p>
+                            {t('Status')} <span>:  </span>
+                            <SmartBadge status={status}/>
+                        </p>
+                        <p>{t('Description')}: 
+                            <span className="wrap-text">
+                                {description}
+                            </span>
+                        </p>
                         <p>{t('Attachements')}</p>
 
                         <div className='images-container'>

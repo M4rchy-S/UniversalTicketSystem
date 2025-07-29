@@ -16,7 +16,12 @@ const app = express();
 const httpServer = createServer(app);
 
 app.use(cors(corsSettings));
-app.use(helmet());
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: {policy: "cross-origin"},
+  }),
+);
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({extended: true, limit: '50mb'}));

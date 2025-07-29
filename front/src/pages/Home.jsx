@@ -6,6 +6,7 @@ import axios from 'axios';
 import SwitchPage from '../components/SwichPage';
 import SwitchStatus from '../components/SwitchStatus';
 import { useTranslation } from 'react-i18next';
+import SmartBadge from '../components/SmartBadge';
 
 
 const Home = () =>{
@@ -23,6 +24,9 @@ const Home = () =>{
     const [files, setFiles] = useState([]);
 
     const {t} = useTranslation();
+
+    const [isdanger, setIsdanger] = useState(false);
+    const [dangertext, setDangertext] = useState("");
 
     function InfoTicketClick(id)
     {
@@ -68,10 +72,13 @@ const Home = () =>{
             setPage(1);
             setStatus(-1);
             update_tickets_list();
+            setIsdanger(false);
             document.getElementById('create-ticket-modal').close();
         })
         .catch(err => {
             console.log(err);
+            setIsdanger(true);
+            setDangertext(err.response.data.errors[0].msg);
         })
     }
 
@@ -131,21 +138,16 @@ const Home = () =>{
                         {
                             tickets.map( ticket => 
                                 <tr key={ticket.id} onClick={e => InfoTicketClick(ticket.id)}>
-                                    <td>{ticket.id}</td>
-                                    <td>{ticket.title}</td>
+                                    <td>
+                                        {ticket.id}
+                                    </td>
+                                    <td>
+                                        <p className='truncate-text'>
+                                            {ticket.title}
+                                        </p>
+                                    </td>
                                     <td> 
-                                        {
-                                            ticket.status == 0 &&
-                                            <div className="badge badge-success">Open</div>
-                                        }
-                                        {
-                                            ticket.status == 1 &&
-                                            <div className="badge badge-warning">In Progress</div>
-                                        }
-                                        {
-                                            ticket.status == 2 &&
-                                            <div className="badge badge-error">Closed</div>
-                                        }
+                                        <SmartBadge status={ticket.status} />
                                     </td>
                                     {/* <td>agent name</td> */}
                                 </tr>)
@@ -180,6 +182,15 @@ const Home = () =>{
                         </div>
 
                         <input className="file-input" type="file" multiple onChange={event => setFiles(event.target.files)} accept='image/*'/>
+
+                        {
+                            isdanger &&
+                            <>
+                                <p className="danger-text">
+                                    {dangertext}
+                                </p>
+                            </>
+                        }
 
                         <button className="btn btn-primary" onClick={ handle_create_ticket }>
                             {t('Create')}

@@ -83,7 +83,11 @@ i18next
 
                         "Subscribe":  "Взять запрос",
                         "Unsubscribe":  "Отложить запрос",
-                        "Language": "Язык"
+                        "Language": "Язык",
+                        "Are you sure you want to logout?": "Вы уверены что хотите выйти из аккаунта?",
+                        "Are you sure you want to delete your account": "Вы уверены что хотите удалить текущий аккаунт?",
+                        "Yes": "Да",
+                        "No": "Нет",
 
                     }
                 }

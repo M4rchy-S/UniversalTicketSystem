@@ -130,10 +130,18 @@ const TicketsManage = () =>{
                     {
                         tickets.map( ticket => 
                             <tr key={ticket.id} className="hover:bg-base-300">
-                                <td>{ticket.id}</td>
-                                <td className='clickable' onClick={e => InfoTicketClick(ticket.id)}>{ticket.title}</td>
-                                <td> 
-                                    <select defaultValue={ticket.status} className="select select-primary selection-menu" onChange={e => { handleChangeStatus(ticket.id, e.target.value);}}>
+                                <td>
+                                    {ticket.id}
+                                </td>
+
+                                <td className='clickable' onClick={e => InfoTicketClick(ticket.id)}>
+                                    <p className='truncate-text'>
+                                        {ticket.title}
+                                    </p>
+                                </td>
+
+                                <td>
+                                    <select defaultValue={ticket.status} className="select select-primary selection-menu" onChange={e => { handleChangeStatus(ticket.id, e.target.value); }}>
                                         <option value='0'>
                                             {t('Opened')}
                                         </option>
@@ -145,6 +153,7 @@ const TicketsManage = () =>{
                                         </option>
                                     </select>
                                 </td>
+                                
                                 <td >
                                     <button className="btn btn-error del-btn" onClick={e => handleDeleteTicket(ticket.id)}>
                                         {t('Delete')}

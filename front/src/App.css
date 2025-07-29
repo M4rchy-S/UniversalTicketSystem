@@ -3,6 +3,14 @@
   themes: all;
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
 :root{
   --font: "Poppins", sans-serif;
   --label-color: #374151;
@@ -12,6 +20,7 @@
   --menu-color: #D1D5DB;
   --success-color: #006044;
 }
+
 
 body p{
   font-family: var(--font);
@@ -45,6 +54,10 @@ h3{
   font-family: var(--font);
 }
 
+.icons{
+  height:24px;
+  width:24px;
+}
 
 .form-header{
   align-self:start;
@@ -297,6 +310,7 @@ button{
   font-family: var(--font);
   font-size: 16px;
   font-weight: 400;
+  table-layout: fixed;
 }
 
 .table thead tr th{
@@ -389,8 +403,8 @@ dialog button{
 
 .right-info-panel{
   padding: 10px;
-  min-width:250px;
-  max-width:300px;
+  min-width:350px;
+  max-width:400px;
 
   border-top: 2px solid var(--menu-color);
   border-left: 0.5px solid var(--menu-color);
@@ -467,6 +481,10 @@ dialog button{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.title-ticket{
+  width: 500px;
 }
 
 .wrap-text{

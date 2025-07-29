@@ -275,15 +275,17 @@ const UserSettings = ({setLogin}) =>{
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
 
-                    <h4>Are you sure you want to delete your account</h4>
+                    <h4>
+                        {t('Are you sure you want to delete your account')}
+                    </h4>
                     <div className="modal-form deletion-form">
 
                         <button className="btn btn-outline btn-error" onClick={deleteAccount}>
-                            Yes
+                            {t('Yes')}
                         </button>
 
                         <button className="btn btn-outline btn-success" onClick={()=>document.getElementById('delete-account-modal').close()}>
-                            No
+                            {t('No')}
                         </button>
 
                     </div>

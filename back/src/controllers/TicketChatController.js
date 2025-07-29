@@ -20,12 +20,22 @@ function WebSocketTicketChat(systemIO)
         socket.on('joinRoom', async ( {room} ) => {
 
             try{
-
+                
+                let result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND id = $2", [session.user_id, room]);
                 if(session.role == 'user')
                 {
-                    const result = await pool.query("SELECT * FROM tickets WHERE author_id = $1 AND id = $2", [session.user_id, room]);
                     if(result.rowCount == 0)
                         throw "Invalid user";
+                }
+
+                result = await pool.query("SELECT * FROM tickets WHERE id = $1", [room]);
+                if(result.rowCount == 0)
+                    throw "Error happened";
+                //  If ticket was closed
+                if(result.rows[0].status == 2)
+                {
+                    userRooms.get(socket.id).delete(room);
+                    throw "Ticket was closed";
                 }
 
                 socket.join(room);
@@ -48,7 +58,7 @@ function WebSocketTicketChat(systemIO)
                 return socket.emit('error', 'Access denied to this room');
             }
 
-            if(msg.length == 0)
+            if(msg.length == 0 || msg.length > 512)
                 return socket.emit('error', 'Access denied to this room');
 
             systemIO.to(room).emit('message', {

@@ -61,8 +61,8 @@ router.post('/user-logout', userController.logOut);
 router.post('/ticket-create',
     upload.array('image', 5), 
     [
-        body('title').notEmpty().isLength({ max: 250 }).withMessage("Incorrect Title Field"),
-        body('description').notEmpty().withMessage("Incorrect description field"),
+        body('title').notEmpty().withMessage("Incorrect title field").isLength({ max: 250 }).withMessage("Incorrect title field"),
+        body('description').notEmpty().withMessage("Description field cannot be empty").isLength({max: 1024}).withMessage("You can enter 1024 max symbols in description field"),
     ],
     validate,
     ticketsController.CreateTicket);
